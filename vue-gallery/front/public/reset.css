@@ -1,0 +1,42 @@
+/***********************************reset********************************************/
+
+html, body{font-size: 16px; width: 100%; height: 100%; color: black;}
+body, p, div,h1, h2 ,h3 ,h4, h5, h6 ,ul, ol ,li ,dl ,dt ,dd, table,th, td, form, fieldset ,legend ,input ,textarea,
+button, select{margin:0; padding:0;}
+/*body, input, textarea, select, button, table, th, td{font-family: 'Malgun Gothic', Dotum, AppleGothic,Sans-serif; font-size: 12px;}*/
+img, fieldset{border: 0;}
+ul, ol, li{list-style: none;}
+img{vertical-align:top;}
+em, address{font-style: normal;}
+table{border-collapse: collapse;}
+a, button{text-decoration: none;}
+a:hover, a:active, a:focus ,a:visited,button:visited{text-decoration: none; outline:none; text-decoration-color: none;}
+
+caption{display: none;}
+/***********************************reset********************************************/
+.skip{
+	display: block;
+	position: absolute;
+	width: 100%;
+	height: 50px;
+	top: -999em;
+	color: #fff;
+	background-color: #000;
+	font-size: 1.2rem;
+	text-align: center;
+	vertical-align: middle;
+	padding-top: 10px;
+	box-sizing: border-box;
+ }
+.skip:focus{
+	position: relative;
+	top: 0;
+	left: 0;
+	text-align: center;
+}
+
+.hidden{
+	position: absolute;
+	top: -99999em;
+}
+
