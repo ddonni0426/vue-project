@@ -59,10 +59,10 @@
           </tr>
         </tbody>
       </table>
-      <button type="submit" class="signupBtn">SIGNUP</button>
+      <button type="submit" class="submitBtn">SIGNUP</button>
     </form>
     <div id="modal-bg" :class="$mq" v-if="alarm">
-      <div class="modal" :class="$mq" >
+      <div class="modal" :class="$mq">
         <section>{{alarm}}을 다시 확인해 주세요</section>
         <button @click="closeModal">확인</button>
       </div>
@@ -70,7 +70,7 @@
   </div>
 </template>
 
-<script> 
+<script>
 export default {
   data() {
     return {
@@ -84,6 +84,13 @@ export default {
   },
   computed: {},
   methods: {
+    onLogin() {
+      //로그인 요청
+      return this.$store.dispatch("user/login", {
+        email: this.email,
+        password: this.password
+      });
+    },
     setAlarm(alarmName) {
       return (this.alarm = alarmName);
     },
@@ -137,7 +144,7 @@ export default {
           }
         }
       } else {
-       return this.setAlarm('양식');
+        return this.setAlarm("양식");
       }
     },
     onBlur(e) {
@@ -179,7 +186,7 @@ export default {
       return this.checked === true;
     },
     closeModal() {
-     return this.alarm = null;
+      return (this.alarm = null);
     }
   },
   middleware: "anonymous"
@@ -187,7 +194,7 @@ export default {
 </script>
 
 <style scoped>
-.signWrap{
+.signWrap {
   width: 100%;
 }
 form,
@@ -212,12 +219,12 @@ input[type="password"] {
   padding: 0 10px;
 }
 .chk,
-.signupBtn {
+.submitBtn {
   margin: 0 auto;
-  width: 80%;
+  width: 62%;
   height: 60px;
 }
-.signupBtn {
+.submitBtn {
   text-align: center;
   background-color: #333;
   color: azure;
@@ -263,5 +270,8 @@ input::placeholder {
 }
 .modal header {
   text-align: end;
+}
+.m-login.mobile {
+  display: block;
 }
 </style>

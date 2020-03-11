@@ -51,7 +51,7 @@
       <!-- Navigator 끝-->
 
       <!-- Login Box -->
-      <login-form class="loginBox" :class="$mq"></login-form>
+      <login-form class="loginBox"></login-form>
     </div>
     <!-- 페이지 부분 -->
     <section id="page">
@@ -164,8 +164,9 @@ export default {
   justify-content: flex-end;
   padding: 0.8em 0;
 }
-#wrapper .loginBox.mobile {
-display: none;
+#wrapper .loginBox.mobile{
+  right: 0;
+  width: 100%;
 }
 
 .naviWrap #pc-bar {
