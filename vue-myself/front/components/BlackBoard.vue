@@ -1,7 +1,5 @@
 <template>
   <div id="board" @click.prevent="addText">
-
-
   </div>
 </template>
 

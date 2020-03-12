@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import PostCard from "~/layouts/PostCard.vue";
+import PostCard from "~/components/PostCard.vue";
 
 export default {
   components: {

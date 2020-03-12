@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app">
     <div id="wrapper">
       <!-- Navigator 시작-->
       <div class="naviWrap" :class="$mq" v-if="me">
@@ -15,41 +15,12 @@
                 v-model="kWord"
                 @input.prevent="detectSearch"
               />
-              <i class="fas fa-search" @click.prevent="onSearch"></i>
+              <i class="fas fa-search" @click.prevent="detectSearch"></i>
             </span>
           </div>
         </nav>
       </div>
-
-      <!-- 테블릿 이하 메뉴시작 -->
-      <div class="tab-naviWrap" :class="$mq" v-if="me">
-        <nav id="tab-bar">
-          <ul>
-            <li>
-              <nuxt-link to="/memo">
-                <i class="fas fa-border-all m-btn" :class="$mq"></i>
-              </nuxt-link>
-            </li>
-            <li>
-              <nuxt-link to="/todo">
-                <i class="far fa-list-alt m-btn" :class="$mq"></i>
-              </nuxt-link>
-            </li>
-            <li>
-              <nuxt-link to="/sketch">
-                <i class="fas fa-palette m-btn" :class="$mq"></i>
-              </nuxt-link>
-            </li>
-            <li>
-              <nuxt-link to="/setting">
-                <i class="fas fa-user-cog m-btn" :class="$mq"></i>
-              </nuxt-link>
-            </li>
-          </ul>
-        </nav>
-      </div>
       <!-- Navigator 끝-->
-
       <!-- Login Box -->
       <login-form class="loginBox"></login-form>
     </div>
@@ -68,13 +39,41 @@
         </a>
       </div>
     </section>
+    <!-- 테블릿 이하  하단 메뉴시작 -->
+    <div class="tab-naviWrap" :class="$mq" v-if="me">
+      <nav id="tab-bar">
+        <ul>
+          <li>
+            <nuxt-link to="/memo">
+              <i class="fas fa-border-all m-btn" :class="$mq"></i>
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link to="/todo">
+              <i class="far fa-list-alt m-btn" :class="$mq"></i>
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link to="/sketch">
+              <i class="fas fa-palette m-btn" :class="$mq"></i>
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link to="/setting">
+              <i class="fas fa-user-cog m-btn" :class="$mq"></i>
+            </nuxt-link>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <!-- 테블릿 이하 메뉴 끝 -->
   </div>
 </template>
 
 <script>
-import LeftSide from "./LeftSide.vue";
-import LoginForm from "./LoginForm.vue";
-import SearchCard from "../pages/search.vue";
+import LeftSide from "../components/LeftSide.vue";
+import LoginForm from "../components/LoginForm.vue";
+import SearchCard from "../components/search.vue";
 import Setting from "../pages/setting.vue";
 import throttle from "lodash.throttle";
 import debounce from "lodash.debounce";
@@ -100,25 +99,20 @@ export default {
     }
   },
   methods: {
-    todoPage() {},
-
     onScroll: throttle(function() {
-      const goTop = document.querySelector(".goTop");
+      const goTop = document.querySelector(".goTop i");
       if (
-        document.documentElement.scrollHeight - 500 <
+        document.documentElement.scrollHeight - 1000 <
         document.documentElement.clientHeight + window.scrollY
       ) {
-        goTop.style.display = "block";
+        goTop.style.color = "#333";
       } else {
-        goTop.style.display = "none";
+        goTop.style.color = "transparent";
       }
-    }, 600),
+    }, 1000),
 
-    onSearch() {
-      return (this.keyword = this.kWord);
-    },
     detectSearch: debounce(async function() {
-      await this.onSearch();
+      this.keyword = this.kWord;
       const res = await this.$store.dispatch("post/search", {
         userId: this.$store.state.user.me.id,
         keyword: encodeURIComponent(this.keyword)
@@ -130,13 +124,9 @@ export default {
         });
       }
       return;
-    }, 50),
-    dropMenu() {
-      console.log("드롭다운");
-    }
+    }, 50)
   },
   mounted() {
-    //created에서는 DOM이나 window객체 못 씀!!!
     window.addEventListener("scroll", this.onScroll);
   },
   beforeDestroy() {
@@ -146,6 +136,9 @@ export default {
 </script>
 
 <style scoped>
+#app {
+  position: relative;
+}
 #wrapper {
   position: relative;
   display: flex;
@@ -164,11 +157,10 @@ export default {
   justify-content: flex-end;
   padding: 0.8em 0;
 }
-#wrapper .loginBox.mobile{
+#wrapper .loginBox.mobile {
+  position: absolute;
   right: 0;
-  width: 100%;
 }
-
 .naviWrap #pc-bar {
   display: flex;
   justify-content: flex-start;
@@ -196,15 +188,7 @@ export default {
 .fa-bars.labtop {
   display: none;
 }
-.tab-naviWrap.tablet > #tab-bar > button {
-  margin: 0 20px;
-  font-size: 1.7rem;
-}
-/* 드롭메뉴 버튼 */
-.tab-naviWrap.mobile > #tab-bar > button {
-  margin: 0 20px;
-  font-size: 1.7rem;
-}
+
 .searchBox {
   margin-right: 10px;
 }
@@ -250,30 +234,60 @@ input {
   width: 100%;
   margin: 0 auto;
 }
+
+/* 하단 메뉴 css*/
+.tab-naviWrap.tablet,
+.tab-naviWrap.mobile {
+  position: fixed;
+  height: 50px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+}
+#tab-bar ul {
+  display: flex;
+  justify-content: space-evenly;
+  line-height: 50px;
+}
 #tab-bar ul li {
   display: inline-block;
   padding: 0 10px;
 }
 #tab-bar ul li .m-btn {
-  font-size: 1.2rem;
+  font-size: 1.6rem;
+  line-height: 50px;
 }
-
 #tab-bar .m-btn.labtop,
 #tab-bar .m-btn.pc {
   display: none;
   color: transparent;
 }
+.tab-naviWrap.tablet > #tab-bar > button {
+  margin: 0 20px;
+  font-size: 1.7rem;
+}
+.tab-naviWrap.mobile > #tab-bar > button {
+  margin: 0 20px;
+  font-size: 1.7rem;
+}
+/* 하단 메뉴 css 끝*/
+
 .goTop {
-  display: none;
+  display: block;
   position: fixed;
-  bottom: 1.2rem;
+  bottom: 4rem;
   right: 1.2rem;
 }
 .goTop i {
   font-size: 50px;
-  color: #333;
+  color: transparent;
   opacity: 0.7;
-  transition: 1s;
+  transition: 0.5s;
+}
+.fa-arrow-alt-circle-up:hover:before,
+.goTop i:hover {
+  color: #333;
 }
 .goTop.mobile i {
   font-size: 35px;

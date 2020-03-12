@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     important:{
-      type:DataTypes.BOOLEAN()
+      type:DataTypes.BOOLEAN(),
+      defaultValue: false
     }
   }, {
     charset: 'utf8mb4',

@@ -23,7 +23,7 @@
       <footer>
         <ul class="btn-list">
           <li>
-            <a href @click.prevent="onToggle">
+            <a href @click.prevent="setImportant">
               <!-- 텅빈 별(안 중요 false) -->
               <i class="far fa-star" v-if="!star"></i>
               <!-- 꽉찬 별( 중요 true)-->
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import clipboard2 from "nuxt-clipboard2";
+import clipboard from "nuxt-clipboard2";
 
 export default {
   props: {
@@ -61,13 +61,15 @@ export default {
   computed: {
     nodes() {
       return this.post.content.split(/(#[^\s#]+)/);
-    }
+    },
+    star() {
+      return this.post.important;
+    },
   },
   data() {
     return {
       onEditor: false,
-      edit: this.post.content,
-      star: false
+      edit: this.post.content
     };
   },
   methods: {
@@ -86,22 +88,25 @@ export default {
     word(node) {
       return node.startsWith("#") && !node.startsWith("##");
     },
-    onToggle() {
-      return (this.star = !this.star);
+    async setImportant() {
+      await this.$store.dispatch("post/setImportant", {
+        postId: this.post.id,
+        important:this.post.important
+      });
     },
     deleteMemo() {
       this.$store.dispatch("post/deletePost", {
         postId: this.post.id
       });
-    },
-    async onCopy() {
-      this.onEditor = true;
-      const copied = document.querySelector('textarea.editor');
-      console.log(copied)
-      copied.select();
-      document.execCommand("copy");
-      this.onEditor = false;
     }
+    // async onCopy() {
+    //   this.onEditor = true;
+    //   const copied = document.querySelector('textarea.editor');
+    //   console.log(copied)
+    //   copied.select();
+    //   document.execCommand("copy");
+    //   this.onEditor = false;
+    // }
   }
 };
 </script>
@@ -115,9 +120,9 @@ export default {
   justify-content: space-between;
   border: none;
 }
-#post-card.mobile{
+#post-card.mobile {
   max-width: 90%;
-  margin:0;
+  margin: 0;
 }
 .post-header > p {
   display: flex;

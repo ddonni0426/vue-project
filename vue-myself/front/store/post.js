@@ -38,9 +38,15 @@ export const mutations = {
   },
   search(state, payload) {
     return state.posts = payload;
+  },
+  setImportant(state, payload) {
+    const index = state.posts.findIndex(v =>
+      v.id === parseInt(payload.id, 10));
+    return state.posts[index].important = payload.important;
   }
 };
 
+//액션 시작
 export const actions = {
   async addPost({ commit }, payload) {
     try {
@@ -66,7 +72,7 @@ export const actions = {
         const lastPost = state.posts[state.posts.length - 1]; //마지막 게시물
         const lastId = lastPost.id; //
         const res = await this.$axios.get(`/posts?lastId=${lastPost && lastId}&limit=${limit}&userId=${payload.userId}`, { withCredentials: true });
-        commit('loadPosts', { data: res.data });
+        commit('loadPosts', {data: res.data} );
         return;
       }
     } catch (error) {
@@ -124,4 +130,13 @@ export const actions = {
       console.error(error);
     }
   },
+  async setImportant({ commit }, payload) {
+    try {
+      const res = await this.$axios.patch(`/post/important`, { postId: payload.postId, important: payload.important }, { withCredentials: true });
+      commit('setImportant', res.data);
+      return ;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 };

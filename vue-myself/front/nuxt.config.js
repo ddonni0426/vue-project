@@ -11,6 +11,12 @@ module.exports = {
     "nuxt-mq",
     "nuxt-clipboard2",
   ],
+   vue: {
+        config: {
+            productionTip: false,
+            devtools: true
+        }
+    },
   mq: {
     defaultBreakpoint: "test",
     breakpoints: {

@@ -71,4 +71,31 @@ router.delete('/delete', isLoggedIn, async (req, res, next) => {
   }
 });
 
+//중요 게시물 표시 (별버튼 클릭)
+router.patch('/important', isLoggedIn, async (req, res, next) => {
+  try {
+    const old_star = req.body.important;
+    if (old_star) {
+      await db.Post.update(
+        { important: false },
+        { where: { id: req.body.postId } }
+      );
+    } else {
+      await db.Post.update(
+        { important: true },
+        { where: { id: req.body.postId } }
+      );
+    }
+    const result = await db.Post.findOne({
+      where: { id: req.body.postId },
+      attributes: ['id', 'important']
+    });
+    return res.json(result);
+
+  } catch (error) {
+    console.error(error)
+    next(error);
+  }
+});
+
 module.exports = router;

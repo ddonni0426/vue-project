@@ -27,6 +27,7 @@
               <input
                 type="password"
                 name="password1"
+                autocomplete="on"
                 placeholder="Password"
                 v-model="password"
                 @blur="watching"
@@ -38,6 +39,7 @@
               <input
                 type="password"
                 name="password2"
+                autocomplete="on"
                 placeholder="Password"
                 v-model="password2"
                 @blur="watching"
@@ -61,17 +63,18 @@
       </table>
       <button type="submit" class="submitBtn">SIGNUP</button>
     </form>
-    <div id="modal-bg" :class="$mq" v-if="alarm">
-      <div class="modal" :class="$mq">
-        <section>{{alarm}}을 다시 확인해 주세요</section>
-        <button @click="closeModal">확인</button>
-      </div>
+    <div v-if="alarm">
+      <err-modal :alarm="alarm" @close="setAlarm"></err-modal>
     </div>
   </div>
 </template>
 
 <script>
+import ErrModal from "../pages/errors/loginInfoErr.vue";
 export default {
+  components: {
+    ErrModal
+  },
   data() {
     return {
       email: null,
@@ -82,15 +85,7 @@ export default {
       alarm: null
     };
   },
-  computed: {},
   methods: {
-    onLogin() {
-      //로그인 요청
-      return this.$store.dispatch("user/login", {
-        email: this.email,
-        password: this.password
-      });
-    },
     setAlarm(alarmName) {
       return (this.alarm = alarmName);
     },
@@ -187,7 +182,24 @@ export default {
     },
     closeModal() {
       return (this.alarm = null);
+    },
+    onEnter(e) {
+      if (e.keyCode === 13) {
+        this.onSubmit();
+        e.preventDefault();
+      }
+      return;
     }
+  },
+  mounted() {
+    document
+      .querySelector(".signWrap")
+      .addEventListener("keydown", this.onEnter, 0);
+  },
+  beforeDestroy() {
+    document
+      .querySelector(".signWrap")
+      .removeEventListener("keydown", this.onEnter);
   },
   middleware: "anonymous"
 };
@@ -267,11 +279,5 @@ input::placeholder {
   width: 500px;
   height: 170px;
   background: rgba(255, 255, 255, 1);
-}
-.modal header {
-  text-align: end;
-}
-.m-login.mobile {
-  display: block;
 }
 </style>

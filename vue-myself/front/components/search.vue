@@ -9,22 +9,17 @@
         </li>
       </ul>
       <div v-else>
-        검색결과가 존재하지 않습니다.
+        <p> 검색결과가 존재하지 않습니다.</p>
       </div>
     </div>
   </section>
 </template>
 
 <script>
-import PostCard from "../layouts/PostCard.vue";
+import PostCard from "./PostCard.vue";
 export default {
   components: {
     PostCard
-  },
-  data() {
-    return {
-      post:''
-    };
   },
   computed: {
     me() {
@@ -48,7 +43,7 @@ export default {
   },
   mounted() {
     //created에서는 DOM이나 window객체 못 씀
-    window.addEventListener("scroll", this.onScroll);
+    window.addEventListener("scroll", this.onScroll,0);
   },
   beforeDestroy() {
     window.removeEventListener("scroll", this.onScroll);
@@ -84,5 +79,8 @@ ul.post-card > li.card-item {
 
 ul.post-card > li.card-item > div {
   flex: 1 1 auto;
+}
+.noresult{
+  height: 50px;
 }
 </style>

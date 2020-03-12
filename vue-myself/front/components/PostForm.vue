@@ -21,6 +21,7 @@ export default {
   methods: {
     resetForm() {
       this.content = "";
+      document.querySelector(".memo").focus();
     },
     addPost() {
       if (this.content === "") {
@@ -32,11 +33,23 @@ export default {
       });
       this.resetForm();
     },
-    isEnter(e) {
+    onEnter(e) {
       if (e.keyCode === 13) {
-        return "\r\n";
+        this.addPost();
+        e.preventDefault();
       }
+      return;
     }
+  },
+  mounted() {
+    document
+      .querySelector(".memo")
+      .addEventListener("keydown", this.onEnter, 0);
+  },
+  beforeDestroy() {
+    document
+      .querySelector(".memo")
+      .removeEventListener("keydown", this.onEnter);
   }
 };
 </script>
@@ -44,7 +57,8 @@ export default {
 .textCard {
   margin: 0 12.8px 20px;
 }
-.memo.mobile,.memo.tablet {
+.memo.mobile,
+.memo.tablet {
   width: 98%;
 }
 .memo {

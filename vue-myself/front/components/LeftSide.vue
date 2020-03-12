@@ -59,16 +59,29 @@ export default {
         userId: this.me.id
       });
       this.resetForm();
+    },
+    onEnter(e) {
+      if (e.keyCode === 13) {
+        this.addTodo();
+        e.preventDefault();
+      }
+      return;
     }
   },
-    created(){
-    
+  mounted() {
+    document
+      .querySelector(".inputBox")
+      .addEventListener("keydown", this.onEnter, 0);
+  },
+  beforeDestroy() {
+    // document
+    //   .querySelector(".inputBox")
+    //   .removeEventListener("keydown", this.onEnter);
   }
 };
 </script>
 
 <style scoped>
-
 h2 {
   text-align: center;
 }

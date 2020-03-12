@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import LeftSide from "../layouts/LeftSide.vue";
+import LeftSide from "../components/LeftSide.vue";
 
 export default {
   components: {

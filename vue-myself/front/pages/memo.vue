@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import PostForm from "../layouts/PostForm.vue";
-import PostCard from "../layouts/PostCard.vue";
+import PostForm from "../components/PostForm.vue";
+import PostCard from "../components/PostCard.vue";
 import debounce from "lodash.debounce";
 
 export default {
@@ -50,9 +50,9 @@ export default {
     me() {
       return this.$store.state.user.me;
     },
-    hasMorePost() {
-      return this.$store.state.post.hasMorePost;
-    }
+  hasMorePost() {
+    return this.$store.state.post.hasMorePost;
+  }
   },
   methods: {
     onScroll() {
@@ -84,6 +84,10 @@ export default {
     }, 50)
   },
   async fetch({ store }) {
+    await store.dispatch("todo/loadTodos", {
+      userId: store.state.user.me.id,
+      reset: true
+    });
     await store.dispatch("post/loadPosts", {
       userId: store.state.user.me.id,
       reset: true
@@ -92,32 +96,31 @@ export default {
   },
   mounted() {
     //created에서는 DOM이나 window객체 못 씀
-    window.addEventListener("scroll", this.onScroll);
+    window.addEventListener("scroll", this.onScroll,0);
   },
   beforeDestroy() {
     window.removeEventListener("scroll", this.onScroll);
   },
-  middleware: "authenticated" //로그인 한 사람만 접근가능
+  middleware: "authenticated", //로그인 한 사람만 접근가능
 };
 </script>
 
 <style scoped>
 .search.pc,
-.search.labtop
-{ 
+.search.labtop {
   display: none;
 }
 .search.tablet,
-.search.mobile{
+.search.mobile {
   display: inline-block;
   text-align: center;
   width: 100%;
   height: 50px;
 }
 .search.tablet input,
-.search.mobile input{
+.search.mobile input {
   padding-bottom: 3px;
-  border-bottom:1px solid #333;
+  border-bottom: 1px solid #333;
 }
 #right {
   width: 100%;
