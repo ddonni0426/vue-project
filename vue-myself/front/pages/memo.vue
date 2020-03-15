@@ -34,9 +34,11 @@
 import PostForm from "../components/PostForm.vue";
 import PostCard from "../components/PostCard.vue";
 import debounce from "lodash.debounce";
-
 export default {
-  components: { PostForm, PostCard },
+  components: {
+    PostForm,
+    PostCard
+  },
   data() {
     return {
       kWord: "",
@@ -50,9 +52,9 @@ export default {
     me() {
       return this.$store.state.user.me;
     },
-  hasMorePost() {
-    return this.$store.state.post.hasMorePost;
-  }
+    hasMorePost() {
+      return this.$store.state.post.hasMorePost;
+    }
   },
   methods: {
     onScroll() {
@@ -96,12 +98,12 @@ export default {
   },
   mounted() {
     //created에서는 DOM이나 window객체 못 씀
-    window.addEventListener("scroll", this.onScroll,0);
+    window.addEventListener("scroll", this.onScroll, 0);
   },
   beforeDestroy() {
     window.removeEventListener("scroll", this.onScroll);
   },
-  middleware: "authenticated", //로그인 한 사람만 접근가능
+  middleware: "authenticated" //로그인 한 사람만 접근가능
 };
 </script>
 

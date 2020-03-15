@@ -23,7 +23,7 @@
       <footer>
         <ul class="btn-list">
           <li>
-            <a href @click.prevent="setImportant">
+            <a href @click.prevent="setStar">
               <!-- 텅빈 별(안 중요 false) -->
               <i class="far fa-star" v-if="!star"></i>
               <!-- 꽉찬 별( 중요 true)-->
@@ -88,10 +88,10 @@ export default {
     word(node) {
       return node.startsWith("#") && !node.startsWith("##");
     },
-    async setImportant() {
-      await this.$store.dispatch("post/setImportant", {
+    async setStar() {
+      await this.$store.dispatch("post/setStar", {
         postId: this.post.id,
-        important:this.post.important
+        important: this.post.important
       });
     },
     deleteMemo() {
@@ -99,14 +99,6 @@ export default {
         postId: this.post.id
       });
     }
-    // async onCopy() {
-    //   this.onEditor = true;
-    //   const copied = document.querySelector('textarea.editor');
-    //   console.log(copied)
-    //   copied.select();
-    //   document.execCommand("copy");
-    //   this.onEditor = false;
-    // }
   }
 };
 </script>

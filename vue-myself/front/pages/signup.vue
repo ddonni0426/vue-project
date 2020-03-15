@@ -8,7 +8,7 @@
         <tbody>
           <tr>
             <td>
-              <input type="email" name="email" v-model="email" placeholder="Email" @blur="watching" />
+              <input type="email" name="email" v-model="email" placeholder="Email"/>
             </td>
           </tr>
           <tr>
@@ -18,7 +18,6 @@
                 name="nickname"
                 placeholder="Nickname"
                 v-model="nickname"
-                @blur="watching"
               />
             </td>
           </tr>
@@ -30,7 +29,6 @@
                 autocomplete="on"
                 placeholder="Password"
                 v-model="password"
-                @blur="watching"
               />
             </td>
           </tr>
@@ -42,7 +40,6 @@
                 autocomplete="on"
                 placeholder="Password"
                 v-model="password2"
-                @blur="watching"
               />
             </td>
           </tr>
@@ -54,7 +51,6 @@
                 name="checked"
                 value="개인정보수집동의"
                 v-model="checked"
-                @blur="watching"
               />
               <label for="check">개인정보 수집을 동의합니다.</label>
             </td>
@@ -63,18 +59,12 @@
       </table>
       <button type="submit" class="submitBtn">SIGNUP</button>
     </form>
-    <div v-if="alarm">
-      <err-modal :alarm="alarm" @close="setAlarm"></err-modal>
-    </div>
   </div>
 </template>
-
 <script>
-import ErrModal from "../pages/errors/loginInfoErr.vue";
+
 export default {
-  components: {
-    ErrModal
-  },
+
   data() {
     return {
       email: null,
@@ -82,20 +72,9 @@ export default {
       password: null,
       password2: null,
       checked: null,
-      alarm: null
     };
   },
   methods: {
-    setAlarm(alarmName) {
-      return (this.alarm = alarmName);
-    },
-    watching(e) {
-      if (this.onBlur(e)) {
-        return true;
-      } else {
-        this.setAlarm(e.target.name);
-      }
-    },
     onChecker() {
       if (
         this.email &&
@@ -179,9 +158,6 @@ export default {
     },
     permission() {
       return this.checked === true;
-    },
-    closeModal() {
-      return (this.alarm = null);
     },
     onEnter(e) {
       if (e.keyCode === 13) {

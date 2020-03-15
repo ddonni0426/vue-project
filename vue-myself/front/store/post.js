@@ -3,7 +3,9 @@ import throttle from 'lodash.throttle';
 
 export const state = () => ({
   posts: [],
+  starPosts: [],
   hasMorePost: true,
+  hasMoreStar: true,
   imagePaths: [],
 });
 const limit = 9;
@@ -39,10 +41,21 @@ export const mutations = {
   search(state, payload) {
     return state.posts = payload;
   },
-  setImportant(state, payload) {
+  setStar(state, payload) {
     const index = state.posts.findIndex(v =>
       v.id === parseInt(payload.id, 10));
-    return state.posts[index].important = payload.important;
+    state.posts[index].important = payload.important;
+    return state.posts.forEach(v => {
+      state.starPosts.concat(state.posts[index]);
+    });
+  },
+  loadStars(state, payload) {
+    if (payload.reset) {
+      state.starPosts = payload.data
+    } else {  //스크롤 이벤트 발생시 
+      state.starPosts = state.starPosts.concat(payload.data);
+    }
+    return state.hasMoreStar = payload.data.length === 10;
   }
 };
 
@@ -72,7 +85,7 @@ export const actions = {
         const lastPost = state.posts[state.posts.length - 1]; //마지막 게시물
         const lastId = lastPost.id; //
         const res = await this.$axios.get(`/posts?lastId=${lastPost && lastId}&limit=${limit}&userId=${payload.userId}`, { withCredentials: true });
-        commit('loadPosts', {data: res.data} );
+        commit('loadPosts', { data: res.data });
         return;
       }
     } catch (error) {
@@ -130,13 +143,42 @@ export const actions = {
       console.error(error);
     }
   },
-  async setImportant({ commit }, payload) {
+  async loadImportant({ commit }, payload) {
     try {
-      const res = await this.$axios.patch(`/post/important`, { postId: payload.postId, important: payload.important }, { withCredentials: true });
-      commit('setImportant', res.data);
-      return ;
+
     } catch (error) {
       console.error(error);
     }
-  }
+  },
+  async setStar({ commit }, payload) {
+    try {
+      const res = await this.$axios.patch(`/post/important`, { postId: payload.postId, important: payload.important }, { withCredentials: true });
+      commit('setStar', res.data);
+      return;
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  //테이블에 있는 나의 중요 포스트 모두 가져와야 함.
+  loadStars: throttle(async function ({ state, commit }, payload) {
+    try {
+      if (payload && payload.reset) {
+        const res = await this.$axios.get(`/posts/stars?limit=${limit}&userId=${payload.userId}`, { withCredentials: true });
+        commit('loadStars', { data: res.data, reset: true });
+        return;
+      }
+      // 로딩된 포스트가 있으면
+      else if (payload.userId && state.hasMoreStar) {
+        //마지막 게시물
+        const lastPost = state.starPosts[state.starPosts.length - 1];
+        const lastId = lastPost.id;
+        const res = await this.$axios.get(`/posts/stars?lastId=${lastPost && lastId}&limit=${limit}&userId=${payload.userId}`, { withCredentials: true });
+        commit('loadStars', { data: res.data });
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, 1000),
 };

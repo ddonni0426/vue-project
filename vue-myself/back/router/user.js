@@ -87,7 +87,7 @@ router.post('/logout', isLoggedIn, (req, res) => {
   }
 });
 
-// 비번 변경
+// 회원 정보 변경
 router.patch('/modify', isLoggedIn, async (req, res, next) => {
   try {
     const me = await db.User.findOne({
@@ -97,13 +97,16 @@ router.patch('/modify', isLoggedIn, async (req, res, next) => {
     //bcrypt.compare함수는 boolean 값으로 반환해줌
     const verify = await bcrypt.compare(req.body.oldPass, me.password);
     if (!verify) {
-      return res.json({errCode:'1',errMsg:"패스워드가 일치하지 않습니다."});
+      return res.json({ errCode: '1', errMsg: "패스워드가 일치하지 않습니다." });
     }
     const hashed = await bcrypt.hash(req.body.newPass, 10);
-    await me.update({
+    const result = await me.update({
+      nickname: req.body.newNick,
       password: hashed
     });
-    res.send('비밀번호가 변경되었씁니다.');
+    let modifiedUser = JSON.stringify(result);
+    modifiedUser = JSON.parse(modifiedUser);
+    res.status(202).json(modifiedUser);
   } catch (error) {
     console.error(error);
     next(error);

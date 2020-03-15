@@ -4,19 +4,19 @@ module.exports = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-    ]
+    ],
   },
   modules: [
     '@nuxtjs/axios',
     "nuxt-mq",
     "nuxt-clipboard2",
   ],
-   vue: {
-        config: {
-            productionTip: false,
-            devtools: true
-        }
-    },
+  vue: {
+    config: {
+      productionTip: false,
+      devtools: true
+    }
+  },
   mq: {
     defaultBreakpoint: "test",
     breakpoints: {

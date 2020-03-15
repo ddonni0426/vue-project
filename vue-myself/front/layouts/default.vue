@@ -4,8 +4,9 @@
       <!-- Navigator 시작-->
       <div class="naviWrap" :class="$mq" v-if="me">
         <nav id="pc-bar">
+          <nuxt-link to="/" id="home" class="link">홈</nuxt-link>
           <nuxt-link to="/memo" id="memo" class="link">메모</nuxt-link>
-          <nuxt-link to="/sketch" id="home" class="link">스케치</nuxt-link>
+          <nuxt-link to="/calender" id="calender" class="link">일정</nuxt-link>
           <nuxt-link to="/setting" id="setting" class="link">설정</nuxt-link>
           <div class="searchBox">
             <span v-if="me">
@@ -44,6 +45,11 @@
       <nav id="tab-bar">
         <ul>
           <li>
+            <nuxt-link to="/">
+              <i class="fas fa-home m-btn" :class="$mq"></i>
+            </nuxt-link>
+          </li>
+          <li>
             <nuxt-link to="/memo">
               <i class="fas fa-border-all m-btn" :class="$mq"></i>
             </nuxt-link>
@@ -54,8 +60,8 @@
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link to="/sketch">
-              <i class="fas fa-palette m-btn" :class="$mq"></i>
+            <nuxt-link to="/calender">
+              <i class="far fa-calendar-alt m-btn" :class="$mq"></i>
             </nuxt-link>
           </li>
           <li>
@@ -74,7 +80,6 @@
 import LeftSide from "../components/LeftSide.vue";
 import LoginForm from "../components/LoginForm.vue";
 import SearchCard from "../components/search.vue";
-import Setting from "../pages/setting.vue";
 import throttle from "lodash.throttle";
 import debounce from "lodash.debounce";
 
@@ -82,8 +87,8 @@ export default {
   components: {
     LeftSide,
     LoginForm,
-    SearchCard,
-    Setting
+    SearchCard
+    // SettingPage
   },
   data() {
     return {
@@ -188,7 +193,6 @@ export default {
 .fa-bars.labtop {
   display: none;
 }
-
 .searchBox {
   margin-right: 10px;
 }
@@ -239,7 +243,8 @@ input {
 .tab-naviWrap.tablet,
 .tab-naviWrap.mobile {
   position: fixed;
-  height: 50px;
+  height: 65px;
+  z-index: 99;
   left: 0;
   right: 0;
   bottom: 0;
@@ -248,7 +253,7 @@ input {
 #tab-bar ul {
   display: flex;
   justify-content: space-evenly;
-  line-height: 50px;
+  line-height: 65px;
 }
 #tab-bar ul li {
   display: inline-block;
@@ -256,7 +261,7 @@ input {
 }
 #tab-bar ul li .m-btn {
   font-size: 1.6rem;
-  line-height: 50px;
+  line-height: 65px;
 }
 #tab-bar .m-btn.labtop,
 #tab-bar .m-btn.pc {

@@ -3,34 +3,33 @@
     <form @submit.prevent="onSubmit" :class="$mq">
       <table class="settingForm">
         <caption>
-          <h3>비밀번호 변경</h3>
+          <h3>회원정보 변경</h3>
         </caption>
         <tbody>
           <tr>
             <td>
-              <input type="password" name="password1" placeholder="현재 비밀번호" v-model="password" />
+              <input type="text" name="newNick" autocomplete="on" :placeholder="`현재 닉네임:${oldNick}`" v-model="newNick" />
             </td>
           </tr>
           <tr>
             <td>
-              <input type="password" name="password2" placeholder="새 비밀번호" v-model="password2" />
+              <input type="password" name="password1" autocomplete="current-password" placeholder="현재 비밀번호" v-model="password" />
             </td>
           </tr>
           <tr>
             <td>
-              <input type="password" name="password3" placeholder="새 비밀번호" v-model="password3" />
+              <input type="password" name="password2" autocomplete="new-password" placeholder="새 비밀번호" v-model="password2" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="password" name="password3" autocomplete="new-password" placeholder="새 비밀번호" v-model="password3" />
             </td>
           </tr>
         </tbody>
       </table>
       <button type="submit" class="signupBtn">Modify</button>
     </form>
-    <div id="modal-bg" :class="$mq" v-if="alarm">
-      <div class="modal" :class="$mq">
-        <section>{{alarm}}을 다시 확인해 주세요</section>
-        <button @click="closeModal">확인</button>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -38,18 +37,22 @@
 export default {
   data() {
     return {
+      newNick:null,
       password: null,
       password2: null,
       password3: null,
-      alarm: null
     };
   },
-  computed: {},
+  computed: {
+    oldNick(){
+      return this.$store.state.user.me.nickname;
+    }
+  },
   methods: {
-    setAlarm(alarmName) {
-      return (this.alarm = alarmName);
-    },
     isFilled() {
+      if(this.newNick === null){
+        this.newNick = this.oldNick
+      }
       if (this.password && this.password2 && this.password3) {
         return true;
       } else {
@@ -57,29 +60,29 @@ export default {
       }
     },
     resetForm() {
+      this.newNick = null;
       this.password = null;
       this.password2 = null;
       this.password3 = null;
     },
-    onSubmit(e) {
+    async onSubmit(e) {
       if (this.isFilled()) {
         if (this.passwordCheck()) {
-          this.$store.dispatch("user/modify", {
+          await this.$store.dispatch("user/modify", {
             userId: this.$store.state.user.me.id,
+            newNick:this.newNick,
             oldPass: this.password,
             newPass: this.password2
           });
+          this.resetForm();
         }
       } else {
-        return this.setAlarm("양식");
+        debugger ;
       }
     },
     passwordCheck() {
       return this.password2 === this.password3;
     },
-    closeModal() {
-      return (this.alarm = null);
-    }
   },
   middleware: "authenticated" //로그인 한 사람만 접근가능
 };

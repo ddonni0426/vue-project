@@ -44,9 +44,6 @@ export default {
         return alert('로그인 정보를 입력하세요')
       } 
     },
-    onSignup() {
-      this.$router.push("/signup");
-    },
     async logout() {
       try {
         const res = await this.$store.dispatch("user/logout", {});
