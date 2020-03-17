@@ -163,6 +163,8 @@ button.login.tablet i {
 .profile p,
 .profile input {
   padding-right: 10px;
+    line-height: 35px;
+
   color: #fff;
 }
 .profile p {

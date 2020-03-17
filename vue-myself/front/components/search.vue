@@ -1,4 +1,5 @@
 <template>
+<transition name="test" mode="out-in">
   <section id="right">
     <div class="flexWrap">
       <ul class="post-card" v-if="posts.length">
@@ -13,6 +14,7 @@
       </div>
     </div>
   </section>
+</transition>
 </template>
 
 <script>
@@ -20,6 +22,10 @@ import PostCard from "./PostCard.vue";
 export default {
   components: {
     PostCard
+  },
+ transition: {
+    name: 'test',
+    mode: 'out-in'
   },
   computed: {
     me() {

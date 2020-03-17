@@ -1,16 +1,5 @@
 <template>
   <div class="flexWrap" v-if="me">
-    <!-- weekly달력 -->
-    <vue-cal
-      class="main-weekly vuecal--pink-theme"
-      :time="false"
-      :events="events"
-      show-week-numbers
-      :hide-weekdays="[2, 3, 5]"
-      :disable-views="['years', 'year','month','day']"
-    ></vue-cal>
-    <!-- weekly달력 끝-->
-
     <!-- 중요 포스트 리스트 슬라이더 -->
     <ul class="post-card" v-if="starPosts.length">
       <li
@@ -34,13 +23,10 @@
 <script>
 import PostCard from "../components/PostCard.vue";
 import SignupPage from "./signup.vue";
-import VueCal from "vue-cal";
-import "vue-cal/dist/vuecal.css";
 export default {
   components: {
     PostCard,
     SignupPage,
-    VueCal
   },
   computed: {
     me() {

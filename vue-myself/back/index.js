@@ -13,6 +13,7 @@ const postsRouter = require('./router/posts.js');
 const todosRouter = require('./router/todos.js');
 const todoRouter = require('./router/todo.js');
 const hashtagRouter = require('./router/hashtag.js');
+const planRouter = require('./router/plan.js');
 // const oauthRouter = require('/router/oauth.js');
 const index = express();
 
@@ -53,7 +54,8 @@ index.use('/post', postRouter);
 index.use('/posts', postsRouter);
 index.use('/todo', todoRouter);
 index.use('/todos', todosRouter);
-index.use('/hashtag',hashtagRouter)
+index.use('/plan',planRouter);
+
 // index.use('/oauth', oauthRouter);
 
 index.use(passport.initialize());

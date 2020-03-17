@@ -30,12 +30,12 @@
               <i class="fas fa-star" v-else></i>
             </a>
           </li>
-          <li>
-            <a href @click.prevent="onCopy">
               <!-- 수정 -->
+          <!-- <li>
+            <a href @click.prevent="onCopy">
               <i class="far fa-share-square"></i>
             </a>
-          </li>
+          </li> -->
           <li>
             <a href @click.prevent="onEdit">
               <!-- 메뉴 -->

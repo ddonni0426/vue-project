@@ -6,7 +6,7 @@
         <nav id="pc-bar">
           <nuxt-link to="/" id="home" class="link">홈</nuxt-link>
           <nuxt-link to="/memo" id="memo" class="link">메모</nuxt-link>
-          <nuxt-link to="/calender" id="calender" class="link">일정</nuxt-link>
+          <nuxt-link to="/calendar" id="calendar" class="link">일정</nuxt-link>
           <nuxt-link to="/setting" id="setting" class="link">설정</nuxt-link>
           <div class="searchBox">
             <span v-if="me">
@@ -60,7 +60,7 @@
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link to="/calender">
+            <nuxt-link to="/calendar">
               <i class="far fa-calendar-alt m-btn" :class="$mq"></i>
             </nuxt-link>
           </li>

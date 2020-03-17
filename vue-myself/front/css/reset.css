@@ -11,4 +11,13 @@ em, address{font-style: normal;}
 table{border-collapse: collapse;}
 input,a, button{text-decoration: none; outline:none; text-decoration-color: none; background: transparent; border: none; cursor: pointer;}
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 /* ******************reset***************************/ 
