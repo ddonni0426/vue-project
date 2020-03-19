@@ -1,7 +1,7 @@
 <template>
   <transition>
     <div id="bg-modal" :class="$mq">
-      <form @submit.prevent id="modalForm" :class="$mq">
+      <form @submit.prevent="addPlan" id="modalForm" :class="$mq">
         <header>
           <span>일정추가</span>
         </header>
@@ -9,14 +9,16 @@
           <div class="setperiod">
             <div>
               <label>시작</label>
-              <input type="date" :value="selected.date" :min="selected.date" class="start date" />
-              <input type="time" :value="selected.time" class="start time" />
+              <input type="date" v-model="startD" :min="selected.date" class="start date" />
+              <input type="time" v-model="startT" class="start time" />
             </div>
+            <!-- 종료 -->
             <div>
               <label>종료</label>
-              <input type="date" :value="endD" :min="selected.date" max="zzz" class="end date" />
-              <input type="time" :value="endT"  class="end time" />
+              <input type="date" v-model="endD" :min="selected.date" max="zzz" class="end date" />
+              <input type="time" v-model="endT" class="end time" />
             </div>
+            <!-- 종료 -->
           </div>
           <textarea id="plan" cols="20" placeholder="일정을 입력하세요" v-model="title" />
         </main>
@@ -28,7 +30,6 @@
     </div>
   </transition>
 </template>
-
 <script>
 export default {
   props: {
@@ -36,28 +37,41 @@ export default {
   },
   data() {
     return {
-      endD:'',
-      endT:'',
-      title: "",
+      startD: this.selected.date,
+      startT: this.selected.time,
+      endD: null,
+      endT: null,
+      title: null
     };
   },
-  conputed: {},
   methods: {
     close() {
       this.$emit("modalToggle");
+    },
+    isFilled() {
+      return this.startD && this.startT && this.endD && this.endT;
+    },
+    async addPlan() {
+      let chk = this.isFilled();
+      if (chk) {
+        await this.$store.dispatch("calendar/addPlan", {
+          userId: this.$store.state.user.me.id,
+          startD: this.startD,
+          startT: this.startT,
+          endD: this.endD,
+          endT: this.endT,
+          plan: this.title
+        });
+        this.close();
+      } else {
+        // alert("양식");
+        const txt = document.getElementById("plan");
+        this.title = "";
+        txt.style.outlineColor = 'red';
+        txt.focus();
+        txt.setAttribute("placeholder", "양식을 모두 작성해 주세요!");
+      }
     }
-  },
-  addPlan() {
-    this.$store.dispatch("calendar/addPlan", {
-      startD: this.start_date,
-      stratT: this.start_time,
-      endD: this.end_date,
-      endT: this.end_time,
-      plan: this.plan
-    });
-  },
-  mounted() {
-    console.log(this.selected.date);
   }
 };
 </script>
@@ -90,8 +104,6 @@ export default {
   height: 50%;
   text-align: center;
 }
-/* #modalForm.mobile input[type="date"] {
-} */
 input[type="date"] {
   background: #fbefef;
 }

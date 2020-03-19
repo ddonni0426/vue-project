@@ -7,21 +7,22 @@
       <thead>
         <tr class="tab-bar">
           <td colspan="7">
-            <button class="tab month current" @click.prevent="switchTab">월별</button>
-            <button class="tab day" @click.prevent="switchTab">일별</button>
+            <button class="tab month current" @click.prevent="switchTab">달력</button>
+            <button class="tab day" @click.prevent="switchTab">일정</button>
           </td>
         </tr>
         <!-- 가로로(td) 합치려면 colspan -->
         <tr class="title-bar">
           <td colspan="7">
-            <a class="prev" @click.prevent="prevMonth">
-              <i class="fas fa-angle-left"></i>
+            <a class="prev" @click.prevent="switchMonth">
+              <i class="fas fa-angle-left prev"></i>
             </a>
-            <span>{{cal.year}}년</span>
-            <span>{{cal.month+1}}월</span>
-            <span>{{cal.active}}일</span>
-            <a class="next" @click.prevent="nextMonth">
-              <i class="fas fa-angle-right"></i>
+            <span>{{calInfo.year}}년</span>
+            <span>{{calInfo.month+1}}월</span>
+            <span>{{calInfo.weekth}}주차</span>
+            <span>{{calInfo.active}}일</span>
+            <a class="next" @click.prevent="switchMonth">
+              <i class="fas fa-angle-right next"></i>
             </a>
           </td>
         </tr>
@@ -29,14 +30,23 @@
           <td v-for="day in days_name" :key="`${day}${Math.random()}`">{{day}}</td>
         </tr>
         <tr v-else>
-          <p class="day-title">{{ days_name[cal.nowfull] }}요일</p>
+          <p class="day-title">오늘은 {{ days_name[calInfo.dayNum] }}요일</p>
         </tr>
       </thead>
       <tbody>
         <template v-if="tab.monthly">
-          <tr v-for="week in matrix" :key="`${week}${Math.random()}`" class="content month current">
+          <tr
+            v-for="week in calendar"
+            :key="`${week}${Math.random()}`"
+            class="content month current"
+          >
             <td v-for="day in week" :key="`${day}${Math.random()}`" class="month-td">
-              <span v-if="day < cal.active" class="each-day past">{{day}}</span>
+              <span v-if="day < calInfo.active" class="each-day past">{{day}}</span>
+              <a
+                v-else-if="day === calInfo.active"
+                class="each-day today"
+                @dblclick.prevent="createPlan"
+              >{{day}}</a>
               <a v-else class="each-day" @dblclick.prevent="createPlan">{{day}}</a>
             </td>
           </tr>
@@ -46,7 +56,7 @@
             <td colspan="7">
               <ul class="each-day">
                 <li v-for=" plan in plans" :key="`${plan}${Math.random()}`" class="each-plan">
-                  <p>{{`${plan.hour}:${plan.min} ${plan.title}`}}</p>
+                  <p>{{`${plan.startDay} / ${plan.startTime} /${plan.plan}`}}</p>
                 </li>
               </ul>
             </td>
@@ -60,9 +70,7 @@
 <script>
 import AddPlan from "../components/AddPlan.vue";
 export default {
-  components: {
-    AddPlan
-  },
+  components: { AddPlan },
   data() {
     return {
       days_name: ["일", "월", "화", "수", "목", "금", "토"],
@@ -72,11 +80,12 @@ export default {
     };
   },
   computed: {
-    cal() {
-      return this.$store.state.calendar.cal;
+    calInfo() {
+      return this.$store.state.calendar.calInfo;
     },
-    matrix() {
-      return this.$store.state.calendar.matrix;
+    calendar() {
+      //matrix
+      return this.$store.state.calendar.calendar;
     },
     plans() {
       return this.$store.state.calendar.plans;
@@ -90,11 +99,11 @@ export default {
         e.target.classList.add("current");
         current = e.target;
         switch (current.innerText) {
-          case "월별":
+          case "달력":
             this.tab.monthly = true;
             this.tab.daily = false;
             break;
-          case "일별":
+          case "일정":
             this.tab.monthly = false;
             this.tab.daily = true;
             break;
@@ -108,41 +117,42 @@ export default {
     modalToggle() {
       return (this.modal = !this.modal);
     },
-    async prevMonth() {
-      await this.$store.dispatch("calendar/addPlan", {
-        prev: this.cal.month - 1
-      });
+    switchMonth(e) {
+      if (e.target.classList.contains("prev")) {
+        this.$store.dispatch("calendar/prevMonth");
+      } else {
+        this.$store.dispatch("calendar/nextMonth");
+      }
     },
     createPlan(e) {
-      this.selected.date = `${this.cal.year}-0${this.cal.month + 1}-${
+      this.selected.date = `${this.calInfo.year}-0${this.calInfo.month + 1}-${
         e.target.innerText
       }`;
       let nowTime = new Date();
-      let hour =
-        nowTime.getHours().toString().length === 1
-          ? `0${nowTime.getHours()}`
-          : `${nowTime.getHours()}`;
-      let min =
-        nowTime.getMinutes().toString().length === 1
-          ? `0${nowTime.getMinutes()}`
-          : `${nowTime.getMinutes()}`;
+      let hour = this.transform(nowTime.getHours());
+      let min = this.transform(nowTime.getMinutes());
       this.selected.time = `${hour}:${min}`;
       return this.modalToggle();
+    },
+    transform(before) {
+      const after = before.toString().length === 1 ? `0${before}` : `${before}`;
+      return after;
     }
   },
   fetch({ store }) {
-    return store.dispatch("calendar/loadPlan", { reset: true });
-  }
+    store.dispatch("calendar/loadCalendar", { reset: true });
+    return store.dispatch("calendar/loadPlan", {
+      userId: store.state.user.me.id
+    });
+  },
+  middleware: "authenticated"
 };
 </script>
 
 <style scoped>
-.month-td > .each-day:nth-child(17) {
-  background-color: pink;
-}
 #cal-wrap {
   position: relative;
-  width: 90%;
+  width: 80%;
   height: 80%;
   /* background: #ededed; */
   padding: 20px;
@@ -152,7 +162,7 @@ export default {
   height: 100%;
   text-align: center;
   margin: 0 auto;
-  border: 1px solid #333;
+  /* border: 1px solid #333; */
 }
 .day-title {
   height: 100%;
@@ -179,7 +189,6 @@ export default {
 }
 .title-bar {
   height: 55px;
-  line-height: 22px;
   color: #ededed;
   font-size: 22px;
   background: #333;
@@ -201,12 +210,8 @@ export default {
 .sub-bar td:last-child {
   color: dodgerblue;
 }
-/* Transition 연구좀 하자  */
-tbody tr.content {
-  transition: 0.5s ease-out;
-}
 tr {
-  border-top: 1px solid #333;
+  /* border-top: 1px solid #333; */
   height: 30px;
 }
 tr.theday {
@@ -219,13 +224,21 @@ tr.theday ul {
 td {
   width: 30px;
   height: 30px;
-  border: 1px solid #333;
+  /* border: 1px solid #333; */
 }
 .each-day {
   display: inline-block;
-  line-height: 50px;
+  line-height: 80px;
   width: 100%;
   height: 100%;
+}
+.each-day.today {
+  /* background-color: #FBEFEF; */
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: 2px solid #f5a9a9;
+  border-radius: 20px;
+  color: #000;
 }
 .each-day.past {
   text-decoration: line-through;
@@ -236,7 +249,7 @@ td {
   font-size: 16px;
   height: 50px;
   background-color: #fbefef;
-  /* border-bottom: 2px solid #f5a9a9; */
+  border-bottom: 1px solid #f5a9a9;
 }
 .each-plan p {
   font-size: 16px;

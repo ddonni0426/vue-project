@@ -12,12 +12,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(10),
       defaultValue: '00:00',
     },
-    sendTime: {
+    endTime: {
       type: DataTypes.STRING(10),
       defaultValue: '00:00',
     },
     plan: {
       type: DataTypes.STRING(20),
+      allowNull: false
     }
   },
     {

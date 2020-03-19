@@ -76,7 +76,6 @@ router.get('/stars', isLoggedIn, async (req, res, next) => {
       order: [['createdAt', 'DESC']],
       limit: parseInt(req.query.limit, 10) || 9,
     });
-
     if (!stars) {
       return res.status(404).send('중요 게시물 없음');
     }

@@ -12,53 +12,100 @@ const months = [
   { id: 10, name: 'November', lastDay: 30 },
   { id: 11, name: 'December', lastDay: 31 },
 ];
-
 //reduce 다시 연습하기 id를 키값으로 한 객체로 변환
-const monthsTable = months.reduce((prev, val) => (
+export const monthsTable = months.reduce((prev, val) => (
   { ...prev, [val.id]: val }
 ), {});
 
-//getDay()는 요일 반환, getDate() 날짜 반환
 //today = new Date();
-export const initCalendar = (today) => {
-  const thisMonth = today.getMonth();
-  const thisYear = today.getFullYear();
-  //0:일요일 ~ 6:토요일 new Date(2020,03,14).getDay() 하면 6반환
-  const day = new Date(thisYear, thisMonth, 1).getDay();
-  return {
-    modId: thisMonth,
-    year: thisYear,
-    first: day
-  };
+export class InitCalendar {
+  constructor(today) {
+    this.year = today.getFullYear();
+    this.monId = today.getMonth();
+    this.first = new Date(this.year, this.monId, 1).getDay();
+    InitCalendar.Page;
+    //new Date(2020,03,14).getDay() 하면 6반환 -> 토요일
+  }
+  static nextMonth() {
+    let next = new Date();
+    next.setDate(1);
+    next.setMonth(++InitCalendar.Page);
+    let y = next.getFullYear();
+    let m = next.getMonth();
+    let f = next.getDay();
+    return {
+      // next:next,
+      year: y,
+      monId:m,
+      first:f,
+    };
+  }
+  static prevMonth() {
+    let prev = new Date();
+    prev.setDate(1);
+    prev.setMonth(--InitCalendar.Page);
+    let y = prev.getFullYear();
+    let m = prev.getMonth();
+    let f = prev.getDay();
+    return {
+      // prev:prev,
+      year: y,
+      monId:m,
+      first:f,
+    };
+  }
 };
+//InitCalendar끝
 
-export const makeCalendar = (modId, first) => {
-  let monId = modId;
-  let cnt = monthsTable[monId].lastDay;
-  let arr = new Array(cnt).fill(0);
-  const res = arr.map(v => cnt--);
-  res.sort((a, b) => a - b);//1-31 오름차순 정렬한 1차원 배열
 
-  if (first === 0) { //일요일이면 그대로
-    
-  } else { //일요일이 아니면 그만큼 뒤로 밀어줌 
+export function MakeCalendar(monId, first,monthsTable) {
+  this.monId = monId;
+  this.first = first;
+  this.cnt = monthsTable[monId].lastDay;
+};
+//틀 만들기 
+MakeCalendar.prototype.setFrame = function () {
+  let frame = new Array(this.cnt).fill(0).map(v => this.cnt--).sort((a, b) => a - b);
+  if (this.first !== 0) {
     let offset = '';
-    for (let i = 0; i < first; i++) {
-      res.unshift(offset);
+    for (let i = 0; i < this.first; i++) {
+      frame.unshift(offset);
     }
   }
-  //2차원 배열로 변경
-  const matrix = res.reduce((res, number, index) => {
+  return frame;
+};
+//2차원 배열담은 객체로 변경
+MakeCalendar.prototype.matrix = function (frame) {
+  let matrix = frame.reduce((week, number, index) => {
     const criteria = 7; //7개씩 끊어서 배열화
-    const resIndex = Math.floor(index / criteria);
-    if (!res[resIndex]) {
-      res[resIndex] = [];
+    const weekIndex = Math.floor(index / criteria);
+    if (!week[weekIndex]) { //더이상 값이 없을 때
+      week[weekIndex] = [];
     }
-    res[resIndex] = [...res[resIndex], number];
-    return res;
+    week[weekIndex] = [...week[weekIndex], number];
+    return week;
   }, []);
-  return matrix;
+
+  //2차원 배열담은 객체에 주차 표시 
+  const calendar = matrix.reduce((prev, val, i) => (
+    { ...prev, [`${i + 1}주차`]: val }
+  ), []);
+
+  return calendar;
 }
 
-//exports는 back-end에서 쓰임! requierd로 import해야함
-//반면 
+export const getWeekth = (today, calendar) => {
+  const target = today.getDate(); //날짜 가져옴
+  let length = Object.keys(calendar).length;
+  let res = null;
+  while (length) {
+    res = calendar[`${length}주차`].find(v => v === target);
+    if (res === target) {
+      return length;
+    } else {
+      length--;
+    }
+  }
+  return res;
+}
+

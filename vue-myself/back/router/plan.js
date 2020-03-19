@@ -4,12 +4,51 @@ const db = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
-router.get('/', isLoggedIn, async (req, res, next) => { 
+router.get('/', isLoggedIn, async (req, res, next) => {
   try {
-    
+    const planId = parseInt(req.query.planId, 10);
+    const userId = parseInt(req.query.userId, 10);
+
+    const plan = await db.Plan.findOne({
+      where: {
+        id: planId, UserId: userId
+      }
+    });
   } catch (error) {
     console.error(error);
-   next(error);
+    next(error);
+  }
+});
+
+router.post('/', isLoggedIn, async (req, res, next) => {
+  try {
+    const newPlan = await db.Plan.create({
+      UserId: req.body.userId,
+      startDay: req.body.startD,
+      startTime: req.body.stratT,
+      endDay: req.body.endD,
+      endTime: req.body.endT,
+      plan: req.body.plan
+    });
+    return res.json(newPlan);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.delete('/', isLoggedIn, async (req, res, next) => {
+  try {
+    await db.Plan.delete({
+      where: {
+        UserId: req.query.userId,
+        id: req.query.planId
+      }
+    });
+    return res.send('일정이 삭제되었습니다.');
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
 });
 
