@@ -1,5 +1,4 @@
 import { InitCalendar, MakeCalendar, getWeekth, monthsTable } from './middleware';
-
 InitCalendar.Page = new Date().getMonth();
 
 export const state = () => ({
@@ -8,7 +7,8 @@ export const state = () => ({
   calInfo: {
     year: null, month: null, dayNum: null, active: null, weekth: null
   },
-  plans: [],
+  todayPlan: [],
+  allPlans: [],
 });
 
 //뮤테이션 시작
@@ -23,10 +23,10 @@ export const mutations = {
     state.calInfo.weekth = payload.weekth;
     return;
   },
-  loadPlan(state, payload) {
+  loadAllPlan(state, payload) {
     return state.plans = payload;
   },
-  addPlan(state, payload) {
+  addAllPlan(state, payload) {
     // return state.plans = state.plans.concat(payload);
   }
 };
@@ -67,7 +67,7 @@ export const actions = {
       console.error(error);
     }
   },
-  async loadPlan({ state, commit }, payload) {
+  async loadAllPlan({ state, commit }, payload) {
     try {
       const res = await this.$axios.post(`/plans`, {
         userId: payload.userId,
@@ -81,8 +81,8 @@ export const actions = {
   },
   async addPlan({ commit }, payload) {
     try {
-      const time = payload.startT.split(':');
-      const res = await this.$axios.post('/plan', {
+      // const time = payload.startT.split(':');
+      const res = await this.$axios.post('/plan/add', {
         userId: payload.userId,
         startD: payload.startD,
         stratT: payload.startT,
@@ -95,6 +95,20 @@ export const actions = {
       console.error(error);
     }
   },
+  async loadTodayPlan({ state, commit }, payload) {
+    try {
+      const res = await this.$axios.post(`/plan`, {
+        userId: payload.userId,
+        year: state.calInfo.year,
+        month: state.calInfo.month,
+        day: state.calInfo.active,
+      }, { withCredentials: true });
+      commit('loadPlan', res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
   async removePlan() {
     try {
       await this.$axios.delete(`/plan?userId=${payload.userId}`, { withCredentials: true })
@@ -102,5 +116,4 @@ export const actions = {
       console.error(error);
     }
   },
-
 };

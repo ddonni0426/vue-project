@@ -2,7 +2,7 @@
   <ul class="todoWrap">
     <div class="container">
       <li v-for="todo in todos" :key="todo.id" class="item">
-        <span @change="onFinish">
+        <span @change="onFinish" class="todo-elem">
           <input type="checkbox" :id="todo.id" :checked="todo.finish" />
           <label :for="todo.id">{{todo.content}}</label>
         </span>
@@ -49,8 +49,8 @@ export default {
   align-items: center;
 }
 .container {
-  width: 215px;
-  padding: 15px 15px 0 0;
+  width: 260px;
+  padding: 15px 0 0 0;
 }
 input[type="checkbox"] {
   width: 15px;
@@ -71,7 +71,10 @@ input[type="button"] {
   justify-content: flex-start;
   align-items: center;
 }
-
+span.todo-elem{
+width: 240px;
+  padding: 3px 0;
+}
 .delTodo {
   padding-left: 9px;
   font-size: 16px;

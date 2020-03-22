@@ -215,7 +215,7 @@ input {
   margin: 17px auto 0;
 }
 #page #left-page {
-  flex-basis: 360px;
+  flex-basis: 400px;
   flex-shrink: 0;
 }
 #page #left-page.tablet,

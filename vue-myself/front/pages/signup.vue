@@ -109,16 +109,15 @@ export default {
               });
               this.resetForm();
               if (result) {
-                console.log("사인업", result);
                 this.$router.push("/");
               }
             }
           } else {
-            console.log("비밀번호가 일치하지 않습니다.");
+            alert("비밀번호가 일치하지 않습니다.");
           }
         }
       } else {
-        return this.setAlarm("양식");
+        alert("양식을 모두 작성하세요");
       }
     },
     onBlur(e) {
@@ -150,7 +149,7 @@ export default {
         });
         return result + 1;
       } else {
-        console.log("이메일이 잘못되었습니다.");
+        alert("이메일이 잘못되었습니다.");
       }
     },
     passwordCheck() {

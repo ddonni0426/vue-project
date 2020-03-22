@@ -33,6 +33,7 @@
           <p class="day-title">오늘은 {{ days_name[calInfo.dayNum] }}요일</p>
         </tr>
       </thead>
+      <!-- 달력 내용 -->
       <tbody>
         <template v-if="tab.monthly">
           <tr
@@ -56,7 +57,7 @@
             <td colspan="7">
               <ul class="each-day">
                 <li v-for=" plan in plans" :key="`${plan}${Math.random()}`" class="each-plan">
-                  <p>{{`${plan.startDay} / ${plan.startTime} /${plan.plan}`}}</p>
+                  <p>{{`${plan}`}}</p>
                 </li>
               </ul>
             </td>
@@ -69,6 +70,7 @@
 
 <script>
 import AddPlan from "../components/AddPlan.vue";
+import { transform } from "../store/middleware.js";
 export default {
   components: { AddPlan },
   data() {
@@ -87,8 +89,8 @@ export default {
       //matrix
       return this.$store.state.calendar.calendar;
     },
-    plans() {
-      return this.$store.state.calendar.plans;
+    todayPlan() {
+      return this.$store.state.calendar.todayPlan;
     }
   },
   methods: {
@@ -129,19 +131,15 @@ export default {
         e.target.innerText
       }`;
       let nowTime = new Date();
-      let hour = this.transform(nowTime.getHours());
-      let min = this.transform(nowTime.getMinutes());
+      let hour = transform(nowTime.getHours());
+      let min = transform(nowTime.getMinutes());
       this.selected.time = `${hour}:${min}`;
       return this.modalToggle();
-    },
-    transform(before) {
-      const after = before.toString().length === 1 ? `0${before}` : `${before}`;
-      return after;
     }
   },
   fetch({ store }) {
     store.dispatch("calendar/loadCalendar", { reset: true });
-    return store.dispatch("calendar/loadPlan", {
+    return store.dispatch("calendar/loadTodayPlan", {
       userId: store.state.user.me.id
     });
   },
@@ -203,6 +201,10 @@ export default {
   height: 35px;
   line-height: 35px;
   border: none;
+}
+.sub-bar p.day-title {
+  height: 40px;
+  line-height: 40px;
 }
 .sub-bar td:first-child {
   color: red;

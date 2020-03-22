@@ -94,6 +94,10 @@ h2 {
   padding-right: 15px;
   border-bottom: 1px solid black;
 }
+input.inputBox{
+width: 225px;
+text-align: center;
+}
 .add a i {
   font-size: 1.3em;
   color: #333333;

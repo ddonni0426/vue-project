@@ -6,12 +6,15 @@ const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const router = express.Router();
 router.get('/', isLoggedIn, async (req, res, next) => {
   try {
-    const planId = parseInt(req.query.planId, 10);
-    const userId = parseInt(req.query.userId, 10);
+
+    let month = req.body.month+1;
+    month = month.toString().length === 1 ? `0${month}` : `${month}`;
 
     const plan = await db.Plan.findOne({
       where: {
-        id: planId, UserId: userId
+        id: req.body.planId, 
+        UserId: req.body.userId,
+        startDay:{[db.Sequelize.Op.like]:`${req.body.year}-${month}%`}
       }
     });
   } catch (error) {
@@ -20,7 +23,7 @@ router.get('/', isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.post('/', isLoggedIn, async (req, res, next) => {
+router.post('/add', isLoggedIn, async (req, res, next) => {
   try {
     const newPlan = await db.Plan.create({
       UserId: req.body.userId,

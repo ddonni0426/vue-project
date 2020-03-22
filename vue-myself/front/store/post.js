@@ -56,7 +56,8 @@ export const mutations = {
       state.starPosts = state.starPosts.concat(payload.data);
     }
     return state.hasMoreStar = payload.data.length === 10;
-  }
+  },
+  onSlider(state, payload) {}
 };
 
 //액션 시작
@@ -181,4 +182,9 @@ export const actions = {
       console.error(error);
     }
   }, 1000),
+
+  onSlider({ commit }, payload) {
+    console.log(payload);
+    return commit('onSlider', { payload });
+  }
 };
