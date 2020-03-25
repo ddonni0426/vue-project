@@ -51,6 +51,11 @@ export default {
     isFilled() {
       return this.startD && this.startT && this.endD && this.endT;
     },
+    isThisWeek(){
+      const check = new Date();
+      this.startD === check.getDay();
+
+    },
     async addPlan() {
       let chk = this.isFilled();
       if (chk) {
@@ -64,7 +69,6 @@ export default {
         });
         this.close();
       } else {
-        // alert("양식");
         const txt = document.getElementById("plan");
         this.title = "";
         txt.style.outlineColor = 'red';

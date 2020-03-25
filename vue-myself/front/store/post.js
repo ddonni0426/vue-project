@@ -184,7 +184,6 @@ export const actions = {
   }, 1000),
 
   onSlider({ commit }, payload) {
-    console.log(payload);
     return commit('onSlider', { payload });
   }
 };

@@ -10,5 +10,7 @@
 			"path": "C:\\Users\\user\\Desktop\\도은\\eGoing"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"git.ignoreLimitWarning": true
+	}
 }

@@ -35,34 +35,36 @@
       </thead>
       <!-- 달력 내용 -->
       <tbody>
-        <template v-if="tab.monthly">
-          <tr
-            v-for="week in calendar"
-            :key="`${week}${Math.random()}`"
-            class="content month current"
-          >
-            <td v-for="day in week" :key="`${day}${Math.random()}`" class="month-td">
-              <span v-if="day < calInfo.active" class="each-day past">{{day}}</span>
-              <a
-                v-else-if="day === calInfo.active"
-                class="each-day today"
-                @dblclick.prevent="createPlan"
-              >{{day}}</a>
-              <a v-else class="each-day" @dblclick.prevent="createPlan">{{day}}</a>
-            </td>
-          </tr>
-        </template>
-        <template v-else>
-          <tr class="content theday" rowspan="5">
-            <td colspan="7">
-              <ul class="each-day">
-                <li v-for=" plan in plans" :key="`${plan}${Math.random()}`" class="each-plan">
-                  <p>{{`${plan}`}}</p>
-                </li>
-              </ul>
-            </td>
-          </tr>
-        </template>
+        <slot name="table-body">
+          <template v-if="tab.monthly">
+            <tr
+              v-for="week in calendar"
+              :key="`${week}${Math.random()}`"
+              class="content month current"
+            >
+              <td v-for="day in week" :key="`${day}${Math.random()}`" class="month-td">
+                <span v-if="day < calInfo.active" class="each-day past">{{day}}</span>
+                <a
+                  v-else-if="day === calInfo.active"
+                  class="each-day today"
+                  @dblclick.prevent="createPlan"
+                >{{day}}</a>
+                <a v-else class="each-day" @dblclick.prevent="createPlan">{{day}}</a>
+              </td>
+            </tr>
+          </template>
+          <template v-else>
+            <tr class="content theday" rowspan="5">
+              <td colspan="7">
+                <ul class="each-day">
+                  <li v-for=" plan in todayPlan" :key="`${plan}${Math.random()}`" class="each-plan">
+                    <p>{{`${plan.plan}`}}</p>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+          </template>
+        </slot>
       </tbody>
     </table>
   </div>

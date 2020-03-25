@@ -1,16 +1,14 @@
-import { InitCalendar, MakeCalendar, getWeekth, monthsTable } from './middleware';
+import { InitCalendar, MakeCalendar, getWeekth, monthsTable, transform} from './middleware';
 InitCalendar.Page = new Date().getMonth();
 
 export const state = () => ({
   first: '', //첫날 요일
   calendar: [], //1~31
   calInfo: {
-    year: null, month: null, dayNum: null, active: null, weekth: null
-  },
+    year: null, month: null, dayNum: null, active: null, weekth: null },
+  weekPlans: [],
   todayPlan: [],
-  allPlans: [],
 });
-
 //뮤테이션 시작
 export const mutations = {
   loadCalendar(state, payload) {
@@ -23,11 +21,13 @@ export const mutations = {
     state.calInfo.weekth = payload.weekth;
     return;
   },
-  loadAllPlan(state, payload) {
-    return state.plans = payload;
+  loadWeekPlan(state, payload) {
+    console.log(payload);
+    return state.weekPlans = payload;
   },
-  addAllPlan(state, payload) {
-    // return state.plans = state.plans.concat(payload);
+  loadTodayPlan(state,payload) { 
+    console.log(payload);
+    return state.todayPlan = payload;
   }
 };
 //액션 시작
@@ -67,19 +67,33 @@ export const actions = {
       console.error(error);
     }
   },
-  async loadAllPlan({ state, commit }, payload) {
+  async loadWeekPlan({ state, commit }, payload) {
     try {
-      const res = await this.$axios.post(`/plans`, {
+      const res = await this.$axios.post(`/plans/weeks`, {
         userId: payload.userId,
         year: state.calInfo.year,
-        month: state.calInfo.month,
+        month:transform(state.calInfo.month),
+        day: transform(state.calInfo.active),
       }, { withCredentials: true });
-      commit('loadPlan', res.data);
+      commit('loadWeekPlan', res.data);
     } catch (error) {
       console.error(error);
     }
   },
-  async addPlan({ commit }, payload) {
+  async loadTodayPlan({ state, commit }, payload) {
+    try {
+      const res = await this.$axios.post(`/plans/today`, {
+        userId: payload.userId,
+        year: state.calInfo.year,
+        month:state.calInfo.month,
+        day: state.calInfo.active,
+      }, { withCredentials: true });
+      commit('loadTodayPlan', res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  async addPlan({ commit,dispatch }, payload) {
     try {
       // const time = payload.startT.split(':');
       const res = await this.$axios.post('/plan/add', {
@@ -90,25 +104,12 @@ export const actions = {
         endT: payload.endT,
         plan: payload.plan
       }, { withCredentials: true });
+      dispatch('loadTodayPlan',{});
       commit('addPlan', res.data);
     } catch (error) {
       console.error(error);
     }
   },
-  async loadTodayPlan({ state, commit }, payload) {
-    try {
-      const res = await this.$axios.post(`/plan`, {
-        userId: payload.userId,
-        year: state.calInfo.year,
-        month: state.calInfo.month,
-        day: state.calInfo.active,
-      }, { withCredentials: true });
-      commit('loadPlan', res.data);
-    } catch (error) {
-      console.error(error);
-    }
-  },
-
   async removePlan() {
     try {
       await this.$axios.delete(`/plan?userId=${payload.userId}`, { withCredentials: true })

@@ -97,6 +97,10 @@ export const getWeekth = (today, calendar) => {
   }
   return weekNum;
 }
+// export const setWeekly = (today) =>({
+
+
+// });
 
 export function transform(before) {
   const after = before.toString().length === 1 ? `0${before}` : `${before}`;
