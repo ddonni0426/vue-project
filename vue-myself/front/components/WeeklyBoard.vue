@@ -18,12 +18,19 @@
       <tr>
         <td v-for="(day, i) in days_name" :key="`${i}${Math.random()}`" class="each-day">
           <p>{{calendar[`${calInfo.weekth}주차`][i] }}</p>
-          <p v-if="weeklyPlan" class="each-plan">{{}}</p>
+
+          <template v-for="val in settingPlan(calendar[`${calInfo.weekth}주차`][i])">
+            <p
+              v-if="val"
+              :key="`${val}${Math.random()}`"
+              class="each-plan"
+              :title="`${val.startT}`"
+            >{{val.plan}}</p>
+          </template>
         </td>
       </tr>
     </tbody>
   </table>
-  <!-- 주간 달력 -->
 </template>
 
 <script>
@@ -44,20 +51,45 @@ export default {
       ]
     };
   },
+  methods: {
+    settingPlan(dayNum) {
+      let year = parseInt(this.calInfo.year, 10);
+      let month = parseInt(this.calInfo.month, 10) + 1;
+      let day = parseInt(this.calInfo.active, 10) + 1;
+      let dayNum1 = parseInt(dayNum, 10);
+
+      let spread = this.weeklyPlan.map((e, i) => {
+        if (dayNum1 < parseInt(e.startD, 10)) {
+          return;
+        } else if (
+          year < parseInt(e.EndY, 10) ||
+          month < parseInt(e.EndM, 10)
+        ) {
+          return e;
+        } else if (
+          dayNum1 === parseInt(e.EndD, 10) ||
+          dayNum1 <= parseInt(e.EndD, 10)
+        ) {
+          return e;
+        }
+      });
+      return spread;
+    }
+  },
   computed: {
     calendar() {
       return this.$store.state.calendar.calendar;
     },
-    weeklyPlan(){
+    weeklyPlan() {
       return this.$store.state.calendar.weekPlans;
     }
   },
   mounted() {
+    this.settingPlan();
     const today = new Date().getDay();
     const target = document.querySelectorAll(".sub-bar td");
     let ch_bg = document.querySelector(".each-day");
     for (let i of target) {
-      console.log();
       if (i.innerText === this.days_name[today].val) {
         i.classList.add("today");
       }
@@ -85,8 +117,9 @@ export default {
   /* border-right: 1px solid #dedede; */
 }
 .today {
-  border: 2px solid #f5a9a9;
-  background: #fbefef;
+  /* border: 2px solid #f5a9a9; */
+  /* background: #fbefef; */
+  background: #fadbd8;
 }
 td.each-day {
   border-right: 1px solid #dedede;
@@ -97,11 +130,14 @@ td.each-day {
   text-overflow: ellipsis;
 }
 td > p.each-plan {
-  /* background: #fbefef; */
-  opacity: 0.8;
-  height: 26px;
+  text-overflow: ellipsis;
+  overflow-x: auto;
+  white-space: normal;
+  /* word-wrap: normal; */
+
+  opacity: 0.9;
+  min-height: 26px;
   line-height: 26px;
-  border-top: 0.5px solid #f5a9a9;
-  border-bottom: 0.5px solid #f5a9a9;
+  background: #fdedec;
 }
 </style>

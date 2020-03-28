@@ -7,31 +7,27 @@ const router = express.Router();
 //이번주 계획 가져오기
 router.post('/weeks', isLoggedIn, async (req, res, next) => {
   try {
-    let month = req.body.month + 1;
-    let day = req.body.day;
+    let month = req.body.month;
+    let last = req.body.last;
     month = month.toString().length === 1 ? `0${month}` : `${month}`;
-    day = day.toString().length === 1 ? `0${day}` : `${day}`;
-
+    last = last.toString().length === 1 ? `0${last}` : `${last}`;
     const plansAll = await db.Plan.findAll({
       where: {
         UserId: req.body.userId,
-        [db.Sequelize.Op.or]: {
-          startDay: {
-              [db.Sequelize.Op.lte]: `${req.body.year}-${month}-${day + 6}`
+        startDay: {
+          [db.Sequelize.Op.or]: {
+            [db.Sequelize.Op.lte]: `${req.body.year}-${month}-${last}`
           },
-          endDay: {
-            [db.Sequelize.Op.and]: {
-              [db.Sequelize.Op.gte]: `${req.body.year}-${month}-${day}`,
-              [db.Sequelize.Op.lte]: `${req.body.year}-${month}-${day + 6}`
-            }
+        },
+        endDay: {
+          [db.Sequelize.Op.and]: {
+            [db.Sequelize.Op.gte]: `${req.body.year}-${month}-${last - 6}`,
           }
         }
       },
       order: [['startDay', 'ASC'], ['startTime', 'ASC']]
     });
-
     if (!plansAll) { return res.send('일정이 없습니다.'); }
-
     return res.json(plansAll);
   } catch (error) {
     console.error(error);
@@ -44,13 +40,13 @@ router.post('/today', isLoggedIn, async (req, res, next) => {
   try {
     let month = req.body.month + 1;
     let day = req.body.day;
+
     month = month.toString().length === 1 ? `0${month}` : `${month}`;
     day = day.toString().length === 1 ? `0${day}` : `${day}`;
 
     const todayPlan = await db.Plan.findAll({
       where: {
         UserId: req.body.userId,
-
         [db.Sequelize.Op.or]: {
           startDay: { [db.Sequelize.Op.eq]: `${req.body.year}-${month}-${day}` },
           [db.Sequelize.Op.and]: {

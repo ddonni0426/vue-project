@@ -88,7 +88,6 @@ export default {
       return this.$store.state.calendar.calInfo;
     },
     calendar() {
-      //matrix
       return this.$store.state.calendar.calendar;
     },
     todayPlan() {

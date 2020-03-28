@@ -47,13 +47,14 @@ export class InitCalendar {
     };
   }
 };
-//InitCalendar끝
 
+//InitCalendar끝
 export function MakeCalendar(monId, first, monthsTable) {
   this.monId = monId;
   this.first = first;
   this.cnt = monthsTable[this.monId].lastDay;
 };
+
 //달력 데이터 만들기 
 MakeCalendar.prototype.setFrame = function () {
   let frame = new Array(this.cnt).fill(0).map(v => this.cnt--).sort((a, b) => a - b);
@@ -65,6 +66,7 @@ MakeCalendar.prototype.setFrame = function () {
   }
   return frame;
 };
+
 //2차원 배열담은 객체로 변경
 MakeCalendar.prototype.matrix = function (frame) {
   const matrix = frame.reduce((week, number, index) => {
@@ -98,8 +100,6 @@ export const getWeekth = (today, calendar) => {
   return weekNum;
 }
 // export const setWeekly = (today) =>({
-
-
 // });
 
 export function transform(before) {

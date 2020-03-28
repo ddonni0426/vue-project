@@ -1,11 +1,12 @@
-import { InitCalendar, MakeCalendar, getWeekth, monthsTable, transform} from './middleware';
+import { InitCalendar, MakeCalendar, getWeekth, monthsTable, transform } from './middleware';
 InitCalendar.Page = new Date().getMonth();
 
 export const state = () => ({
   first: '', //첫날 요일
   calendar: [], //1~31
   calInfo: {
-    year: null, month: null, dayNum: null, active: null, weekth: null },
+    year: null, month: null, dayNum: null, active: null, weekth: null
+  },
   weekPlans: [],
   todayPlan: [],
 });
@@ -22,11 +23,20 @@ export const mutations = {
     return;
   },
   loadWeekPlan(state, payload) {
-    console.log(payload);
-    return state.weekPlans = payload;
+    state.weekPlans = payload.map(e => ({
+      startY: e.startDay.split('-')[0],
+      startM: e.startDay.split('-')[1],
+      startD: e.startDay.split('-')[2],
+      EndY: e.endDay.split('-')[0],
+      EndM: e.endDay.split('-')[1],
+      EndD: e.endDay.split('-')[2],
+      startT: e.startTime,
+      EndT: e.endTime,
+      plan: e.plan
+    })
+    );
   },
-  loadTodayPlan(state,payload) { 
-    console.log(payload);
+  loadTodayPlan(state, payload) {
     return state.todayPlan = payload;
   }
 };
@@ -72,8 +82,9 @@ export const actions = {
       const res = await this.$axios.post(`/plans/weeks`, {
         userId: payload.userId,
         year: state.calInfo.year,
-        month:transform(state.calInfo.month),
+        month: transform(state.calInfo.month + 1),
         day: transform(state.calInfo.active),
+        last: payload.last
       }, { withCredentials: true });
       commit('loadWeekPlan', res.data);
     } catch (error) {
@@ -85,7 +96,7 @@ export const actions = {
       const res = await this.$axios.post(`/plans/today`, {
         userId: payload.userId,
         year: state.calInfo.year,
-        month:state.calInfo.month,
+        month: state.calInfo.month,
         day: state.calInfo.active,
       }, { withCredentials: true });
       commit('loadTodayPlan', res.data);
@@ -93,9 +104,8 @@ export const actions = {
       console.error(error);
     }
   },
-  async addPlan({ commit,dispatch }, payload) {
+  async addPlan({ commit, dispatch }, payload) {
     try {
-      // const time = payload.startT.split(':');
       const res = await this.$axios.post('/plan/add', {
         userId: payload.userId,
         startD: payload.startD,
@@ -104,7 +114,7 @@ export const actions = {
         endT: payload.endT,
         plan: payload.plan
       }, { withCredentials: true });
-      dispatch('loadTodayPlan',{});
+      dispatch('loadTodayPlan', {});
       commit('addPlan', res.data);
     } catch (error) {
       console.error(error);

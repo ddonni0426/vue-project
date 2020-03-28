@@ -82,6 +82,9 @@ export default {
     calInfo() {
       return this.$store.state.calendar.calInfo;
     },
+    calendar() {
+      return this.$store.state.calendar.calendar;
+    },
     starPosts() {
       return this.$store.state.post.starPosts;
     },
@@ -97,6 +100,10 @@ export default {
     await store.dispatch("calendar/loadCalendar", { reset: true });
     await store.dispatch("calendar/loadWeekPlan", {
       userId: store.state.user.me.id,
+      last:
+        store.state.calendar.calendar[
+          `${store.state.calendar.calInfo.weekth}주차`
+        ][6],
       reset: true
     });
     await store.dispatch("post/loadStars", {
@@ -105,6 +112,7 @@ export default {
     });
     return;
   },
+  mounted() {},
   middleware: "authenticated"
 };
 </script>
