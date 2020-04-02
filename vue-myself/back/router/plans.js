@@ -8,20 +8,20 @@ const router = express.Router();
 router.post('/weeks', isLoggedIn, async (req, res, next) => {
   try {
     let month = req.body.month;
-    let last = req.body.last;
+    let first = req.body.first;
     month = month.toString().length === 1 ? `0${month}` : `${month}`;
-    last = last.toString().length === 1 ? `0${last}` : `${last}`;
+    first = first.toString().length === 1 ? `0${first}` : `${first}`;
     const plansAll = await db.Plan.findAll({
       where: {
         UserId: req.body.userId,
         startDay: {
           [db.Sequelize.Op.or]: {
-            [db.Sequelize.Op.lte]: `${req.body.year}-${month}-${last}`
+            [db.Sequelize.Op.lte]: `${req.body.year}-${month}-${first}`
           },
         },
         endDay: {
           [db.Sequelize.Op.and]: {
-            [db.Sequelize.Op.gte]: `${req.body.year}-${month}-${last - 6}`,
+            [db.Sequelize.Op.gte]: `${req.body.year}-${month}-${first}`,
           }
         }
       },

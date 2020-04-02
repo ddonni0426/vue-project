@@ -1,9 +1,9 @@
 <template>
   <div id="root">
-    <div class="weekly">
+    <div v-if="me" class="weekly">
       <weekly-board :calInfo="calInfo"></weekly-board>
     </div>
-    <h2 class="notice-title" :class="$mq">
+    <h2 v-if="me" class="notice-title" :class="$mq">
       <strong>
         <i class="fas fa-star" /> IMPORTANT POST
         <i class="fas fa-star" />
@@ -15,21 +15,25 @@
         <a class="prev">
           <i class="fas fa-chevron-circle-left prev" :class="$mq" @click.prevent="onSlider"></i>
         </a>
-        <div class="screen">
-          <ul class="contain animated" v-if="starPosts.length">
+        <div class="screen" :class="$mq">
+          <ul class="contain animated" :class="$mq" v-if="starPosts.length">
             <li v-for="(post, i) in starPosts" :key="`${post}${i}`" class="card-item" :class="$mq">
               <post-card :post="post"></post-card>
             </li>
           </ul>
         </div>
         <a class="next">
-          <i class="fas fa-chevron-circle-right next" @click.prevent="onSlider"></i>
+          <i class="fas fa-chevron-circle-right next" :class="$mq" @click.prevent="onSlider"></i>
         </a>
       </template>
       <div v-else>
-        <p>중요한 메모가 없습니다.</p>
+        <p class="noimport">중요한 메모가 없습니다.</p>
       </div>
       <!-- 중요 포스트 리스트 슬라이더 끝 -->
+
+      <!-- 중요 포스트 테블릿, 모바일 -->
+
+      <!-- 중요 포스트 테블릿, 모바일 -->
     </div>
     <!-- 회원가입  -->
     <div v-else>
@@ -100,10 +104,10 @@ export default {
     await store.dispatch("calendar/loadCalendar", { reset: true });
     await store.dispatch("calendar/loadWeekPlan", {
       userId: store.state.user.me.id,
-      last:
+      first:
         store.state.calendar.calendar[
           `${store.state.calendar.calInfo.weekth}주차`
-        ][6],
+        ][0],
       reset: true
     });
     await store.dispatch("post/loadStars", {
@@ -121,6 +125,7 @@ export default {
 /* 포스트잇 CSS */
 #root {
   width: 100%;
+  height: 100%;
 }
 .notice-title {
   font-size: 1.3rem;
@@ -139,7 +144,12 @@ export default {
   display: flex;
   justify-content: space-evenly;
   width: 100%;
+  height: 350px;
 }
+.flexWrap.mobile{
+  margin-bottom: 65px;
+}
+
 .flexWrap a,
 .flexWrap a i {
   display: inline-block;
@@ -147,8 +157,11 @@ export default {
   opacity: 0.9;
   color: #333;
   /* width: 80px; */
-  height: 400px;
+  height: 350px;
   line-height: 400px;
+}
+a > i.mobile {
+  display: none;
 }
 .screen {
   position: relative;
@@ -156,10 +169,14 @@ export default {
   align-items: center;
   flex-wrap: nowrap;
   width: 90%;
-  height: 380px;
+  height: 340px;
   overflow: hidden;
 }
-
+.screen.mobile {
+  width: 95%;
+  display: block;
+  overflow: unset;
+}
 ul.contain {
   position: absolute;
   left: 0;
@@ -167,7 +184,16 @@ ul.contain {
   margin-top: -150px;
   min-width: 1000vw;
   overflow: hidden;
-  height: 380px;
+  height: 350px;
+}
+ul.contain.mobile {
+  position: unset;
+  margin-top: 10px;
+  min-width: 80%;
+  width: 100%;
+  min-height: 100%;
+  height: 100%;
+  overflow: unset;
 }
 ul.animated {
   -webkit-transition: left 0.3s ease-in;
@@ -202,16 +228,23 @@ ul.contain > li.card-item.tablet {
   width: 380px;
   margin: 0.3rem 0.3rem 0.3rem;
 }
-ul.contain > li.card-item.mobile {
+ul.contain.mobile > li.card-item.mobile {
   overflow-y: auto;
   overflow: hidden;
   text-overflow: ellipsis;
   overflow-x: none;
-  width: 248px;
-  height: 300px;
-  /* margin: 0.3rem 0.3rem 0.3rem; */
+  width: 100%;
+  height: 280px;
+  margin: 0.3rem 0.3rem 0.3rem;
+}
+ul.contain.mobile > li.card-item:last-child.mobile{
+  margin-bottom: 100px;
 }
 
+p.noimport {
+  margin: 50px auto;
+  width: 100%;
+}
 /* 포스트잇 색상 변경가능하도록.
 gold 
 #FBEFEF #F5A9A9 분홍 

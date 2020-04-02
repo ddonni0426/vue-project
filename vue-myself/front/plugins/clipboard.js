@@ -1,4 +1,5 @@
-import Vue from 'vue'
-import Clipboard from 'nuxt-clipboard2'
+export default {
+  methods: {
 
-Vue.use(Clipboard);
+  },
+};

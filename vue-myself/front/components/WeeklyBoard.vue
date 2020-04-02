@@ -1,6 +1,6 @@
 <template>
   <!-- 주간 달력 -->
-  <table class="weekly">
+  <table class="weekly" :class="$mq">
     <thead class="week-header">
       <tr class="title-bar">
         <td colspan="7">
@@ -11,21 +11,30 @@
         </td>
       </tr>
       <tr class="sub-bar">
-        <td v-for="day in days_name" :key="`${day.num}${Math.random()}`">{{day.val}}</td>
+        <td v-for="day in days_name" :key="`${day.num}${Math.random()}`">
+          <p>{{day.val}}</p>
+        </td>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td v-for="(day, i) in days_name" :key="`${i}${Math.random()}`" class="each-day">
-          <p>{{calendar[`${calInfo.weekth}주차`][i] }}</p>
-
+          <p class="daynumber">{{calendar[`${calInfo.weekth}주차`][i] }}</p>
           <template v-for="val in settingPlan(calendar[`${calInfo.weekth}주차`][i])">
             <p
               v-if="val"
               :key="`${val}${Math.random()}`"
               class="each-plan"
+              :class="$mq"
               :title="`${val.startT}`"
             >{{val.plan}}</p>
+            <p
+              v-if="val"
+              :key="`${val}${Math.random()}`"
+              class="each-plan mob"
+              :class="$mq"
+              :title="`${val.plan}`"
+            >{{val.startT}}</p>
           </template>
         </td>
       </tr>
@@ -106,6 +115,9 @@ export default {
   height: 400px;
   text-align: center;
 }
+table.weekly.mobile {
+  width: 80%;
+}
 .title-bar {
   height: 50px;
   background: #333;
@@ -134,10 +146,18 @@ td > p.each-plan {
   overflow-x: auto;
   white-space: normal;
   /* word-wrap: normal; */
-
   opacity: 0.9;
   min-height: 26px;
   line-height: 26px;
   background: #fdedec;
+}
+td > p.each-plan.mobile {
+  display: none;
+}
+td > p.each-plan.mob {
+  display: none;
+}
+td > p.each-plan.mob.mobile {
+  display: inline-block;
 }
 </style>

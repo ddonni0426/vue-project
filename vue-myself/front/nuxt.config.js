@@ -6,19 +6,15 @@ module.exports = {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     ],
   },
-  // transition: {
-  //   name: 'fade',
-  //   mode: 'out-in',
-  //   beforeEnter(el) {
-  //     // el => 페이지 컴포넌트 DOM 객체
-  //     console.log('페이지 트랜지션 진입', el)
-  //   }
-  // },
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/moment',
     "nuxt-mq",
-    "nuxt-clipboard2",
+    'nuxt-clipboard2',
   ],
+  moment: {
+    locales: ['ko']
+  },
   vue: {
     config: {
       productionTip: false,
@@ -45,6 +41,5 @@ module.exports = {
   ],
   plugins: [
     "@/plugins/fontawesome.js",
-    // { src: '~/plugins/swiper.js', ssr: false },
   ],
 };

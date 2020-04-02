@@ -72,6 +72,7 @@ MakeCalendar.prototype.matrix = function (frame) {
   const matrix = frame.reduce((week, number, index) => {
     const criteria = 7; //7개씩 끊어서 배열화
     const weekIndex = Math.floor(index / criteria);
+    // let counter = 0;
     if (!week[weekIndex]) { //더이상 값이 없을 때
       week[weekIndex] = [];
     }

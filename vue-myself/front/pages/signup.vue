@@ -8,17 +8,12 @@
         <tbody>
           <tr>
             <td>
-              <input type="email" name="email" v-model="email" placeholder="Email"/>
+              <input type="email" name="email" v-model="email" placeholder="Email" />
             </td>
           </tr>
           <tr>
             <td>
-              <input
-                type="text"
-                name="nickname"
-                placeholder="Nickname"
-                v-model="nickname"
-              />
+              <input type="text" name="nickname" placeholder="Nickname" v-model="nickname" />
             </td>
           </tr>
           <tr>
@@ -45,13 +40,7 @@
           </tr>
           <tr>
             <td class="chk">
-              <input
-                type="checkbox"
-                id="check"
-                name="checked"
-                value="개인정보수집동의"
-                v-model="checked"
-              />
+              <input type="checkbox" id="check" name="checked" value="개인정보수집동의" v-model="checked" />
               <label for="check">개인정보 수집을 동의합니다.</label>
             </td>
           </tr>
@@ -62,16 +51,14 @@
   </div>
 </template>
 <script>
-
 export default {
-
   data() {
     return {
       email: null,
       nickname: null,
       password: null,
       password2: null,
-      checked: null,
+      checked: null
     };
   },
   methods: {
@@ -170,11 +157,6 @@ export default {
     document
       .querySelector(".signWrap")
       .addEventListener("keydown", this.onEnter, 0);
-  },
-  beforeDestroy() {
-    document
-      .querySelector(".signWrap")
-      .removeEventListener("keydown", this.onEnter);
   },
   middleware: "anonymous"
 };

@@ -12,6 +12,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.12.1",
     "@nuxtjs/axios": "^5.9.5",
+    "@nuxtjs/moment": "^1.6.0",
     "axios": "^0.19.2",
     "friendly-errors-webpack-plugin": "^1.7.0",
     "lodash.debounce": "^4.0.8",

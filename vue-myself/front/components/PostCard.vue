@@ -11,7 +11,7 @@
       </header>
       <section class="post-content">
         <div v-if="!onEditor">
-          <span v-for="(node, i) in nodes" :key="i">
+          <span v-for="(node, i) in nodes" :value="node" :key="i">
             <nuxt-link v-if="word(node)" :to="`/hashtag/${node.slice(1)}`">{{node}}</nuxt-link>
             <span v-else class="node">{{node}}</span>
           </span>
@@ -30,12 +30,12 @@
               <i class="fas fa-star" v-else></i>
             </a>
           </li>
-              <!-- 수정 -->
-          <!-- <li>
-            <a href @click.prevent="onCopy">
+          <!-- 수정 -->
+          <li>
+            <a href @submit="copySomething">
               <i class="far fa-share-square"></i>
             </a>
-          </li> -->
+          </li>
           <li>
             <a href @click.prevent="onEdit">
               <!-- 메뉴 -->
@@ -43,7 +43,7 @@
             </a>
           </li>
           <li>
-            <p>{{post.createdAt}}</p>
+            <p>{{$moment(post.createdAt).fromNow()}}</p>
           </li>
         </ul>
       </footer>
@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import clipboard from "nuxt-clipboard2";
 
 export default {
   props: {
@@ -64,15 +63,25 @@ export default {
     },
     star() {
       return this.post.important;
-    },
+    }
   },
   data() {
     return {
       onEditor: false,
-      edit: this.post.content
+      edit: this.post.content,
+      // copyNode:'',
     };
   },
   methods: {
+    async copySomething() {
+      const nodes = document.querySelector('#nodes');
+      console.log('카피노드',nodes.innerText)
+      try {
+        await this.$copyText(this.copyNode);
+      } catch (e) {
+        console.error(e);
+      }
+    },
     async onEdit() {
       if (this.onEditor === false) {
         return (this.onEditor = !this.onEditor);

@@ -26,7 +26,7 @@
       <login-form class="loginBox"></login-form>
     </div>
     <!-- 페이지 부분 -->
-    <section id="page">
+    <section id="page" :class="$mq">
       <div id="left-page" v-if="me" :class="$mq">
         <left-side></left-side>
       </div>
@@ -42,6 +42,7 @@
     </section>
     <!-- 테블릿 이하  하단 메뉴시작 -->
     <div class="tab-naviWrap" :class="$mq" v-if="me">
+    <div class="under-nav" :class="$mq"></div>
       <nav id="tab-bar">
         <ul>
           <li>
@@ -107,7 +108,7 @@ export default {
     onScroll: throttle(function() {
       const goTop = document.querySelector(".goTop i");
       if (
-        document.documentElement.scrollHeight - 1000 <
+        document.documentElement.scrollHeight - 500 <
         document.documentElement.clientHeight + window.scrollY
       ) {
         goTop.style.color = "#333";
@@ -214,6 +215,7 @@ input {
   flex-wrap: wrap;
   margin: 17px auto 0;
 }
+
 #page #left-page {
   flex-basis: 400px;
   flex-shrink: 0;
@@ -223,16 +225,24 @@ input {
   display: none;
 }
 #page #right-page {
-  position: relative;
+  /* position: relative; */
   width: 100%;
   flex: 1 1 0;
   border-left: 1px solid #333;
   display: flex;
   justify-content: space-evenly;
 }
+#page #right-paget.mobile {
+  flex-grow: 1;
+  max-height: 100vh;
+  overflow-y: auto;
+
+}
+
 #page #right-page.tablet,
 #page #right-page.mobile {
   border-left: 0;
+  min-height: 100%;
 }
 #right-page #routingPage {
   width: 100%;
@@ -276,8 +286,8 @@ input {
   margin: 0 20px;
   font-size: 1.7rem;
 }
-/* 하단 메뉴 css 끝*/
 
+/* 하단 메뉴 css 끝*/
 .goTop {
   display: block;
   position: fixed;
@@ -288,7 +298,7 @@ input {
   font-size: 50px;
   color: transparent;
   opacity: 0.7;
-  transition: 0.5s;
+  transition: 0.2s;
 }
 .fa-arrow-alt-circle-up:hover:before,
 .goTop i:hover {

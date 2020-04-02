@@ -60,7 +60,6 @@ export const actions = {
       let prev_table = prevCal.matrix(prevCal.setFrame());
       const weekth = getWeekth(today, prev_table);
       return commit('loadCalendar', { calendar: prev_table, today, init: prev, weekth });
-
     } catch (error) {
       console.error(error);
     }
@@ -84,7 +83,7 @@ export const actions = {
         year: state.calInfo.year,
         month: transform(state.calInfo.month + 1),
         day: transform(state.calInfo.active),
-        last: payload.last
+        first: payload.first
       }, { withCredentials: true });
       commit('loadWeekPlan', res.data);
     } catch (error) {
