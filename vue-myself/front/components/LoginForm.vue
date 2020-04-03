@@ -46,6 +46,7 @@ export default {
     },
     async logout() {
       try {
+        await this.$store.dispatch('post/rmMood');
         const res = await this.$store.dispatch("user/logout", {});
         this.$router.push("/");
       } catch (error) {

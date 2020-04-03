@@ -54,7 +54,6 @@ export default {
     isThisWeek(){
       const check = new Date();
       this.startD === check.getDay();
-
     },
     async addPlan() {
       let chk = this.isFilled();
@@ -66,7 +65,7 @@ export default {
           endD: this.endD,
           endT: this.endT,
           plan: this.title
-        });
+        }, { root: true });
         this.close();
       } else {
         const txt = document.getElementById("plan");

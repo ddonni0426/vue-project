@@ -10,7 +10,6 @@ export const mutations = {
     if (payload && payload.reset) { //리셋 또는 최초 로딩시
       return state.todo = payload.data;
     } else { // 게시물  
-      console.log('투두가 concat되는 경우');
       return state.todo = state.todo.concat(payload.data);
     }
   },

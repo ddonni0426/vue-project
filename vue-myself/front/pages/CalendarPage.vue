@@ -12,8 +12,8 @@
           </td>
         </tr>
         <!-- 가로로(td) 합치려면 colspan -->
-        <tr class="title-bar">
-          <td colspan="7">
+        <tr v-if="!tab.daily" class="title-bar">
+          <td v-if="!tab.daily" colspan="7">
             <a class="prev" @click.prevent="switchMonth">
               <i class="fas fa-angle-left prev"></i>
             </a>
@@ -30,7 +30,12 @@
           <td v-for="day in days_name" :key="`${day}${Math.random()}`">{{day}}</td>
         </tr>
         <tr v-else>
-          <p class="day-title">오늘은 {{ days_name[calInfo.dayNum] }}요일</p>
+          <p class="day-title">
+            오늘은
+            {{calInfo.month+1}}월
+            {{calInfo.active}}일
+            {{ days_name[calInfo.dayNum] }}요일
+          </p>
         </tr>
       </thead>
       <!-- 달력 내용 -->
@@ -164,11 +169,12 @@ export default {
   /* border: 1px solid #333; */
 }
 .day-title {
-  height: 100%;
+  height: 35px;
   width: 100%;
   color: #eee;
   background-color: #333;
   border: 0.5px solid #333;
+
 }
 .tab-bar {
   background: #eee;
@@ -186,11 +192,12 @@ export default {
   color: #000;
   opacity: 1;
 }
-.title-bar {
-  height: 55px;
+tr.title-bar {
+  height: 35px;
   color: #ededed;
   font-size: 22px;
   background: #333;
+  line-height: 35px;
 }
 .title-bar a.prev,
 .title-bar a.next {
@@ -252,7 +259,7 @@ td {
   font-size: 16px;
   height: 50px;
   background-color: #fbefef;
-  border-bottom: 1px solid #f5a9a9;
+  /* border-bottom: 1px solid #f5a9a9; */
 }
 .each-plan p {
   font-size: 16px;

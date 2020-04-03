@@ -1,7 +1,6 @@
 //전체 설정
 export const state = () => ({
 
-
 });
 
 export const mutations = {
@@ -21,4 +20,6 @@ export const actions = {
   async nuxtServerInit({ commit, dispatch, state }, { req }) {
     return dispatch('user/loadUser');
   },
+
+
 };

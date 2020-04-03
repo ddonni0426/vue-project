@@ -41,5 +41,6 @@ module.exports = {
   ],
   plugins: [
     "@/plugins/fontawesome.js",
+    { src: '@/plugins/vue-tiny-slider.js', mode: 'client' }
   ],
 };

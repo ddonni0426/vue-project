@@ -1,12 +1,11 @@
-import Vue from 'vue';
 import throttle from 'lodash.throttle';
 
 export const state = () => ({
   posts: [],
+  saveMood: '',
   starPosts: [],
   hasMorePost: true,
   hasMoreStar: true,
-  imagePaths: [],
 });
 const limit = 9;
 
@@ -57,7 +56,12 @@ export const mutations = {
     }
     return state.hasMoreStar = payload.data.length === 10;
   },
-  onSlider(state, payload) {}
+  setMood(state, payload) {
+    return state.saveMood = payload;
+  },
+  rmMood(state) {
+    return state.saveMood = '';
+  }
 };
 
 //액션 시작
@@ -183,7 +187,20 @@ export const actions = {
     }
   }, 1000),
 
-  onSlider({ commit }, payload) {
-    return commit('onSlider', { payload });
-  }
+  async setMood({ commit }, payload) {
+    try {
+      commit('setMood', payload.mood);
+      return;
+    } catch (error) {
+      console.error(error)
+    }
+  },
+  async rmMood({ commit }) {
+    try {
+      commit('rmMood');
+      return;
+    } catch (error) {
+      console.error(error)
+    }
+  },
 };

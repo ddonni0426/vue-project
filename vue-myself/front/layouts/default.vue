@@ -5,9 +5,9 @@
       <div class="naviWrap" :class="$mq" v-if="me">
         <nav id="pc-bar">
           <nuxt-link to="/" id="home" class="link">홈</nuxt-link>
-          <nuxt-link to="/memo" id="memo" class="link">메모</nuxt-link>
-          <nuxt-link to="/calendar" id="calendar" class="link">일정</nuxt-link>
-          <nuxt-link to="/setting" id="setting" class="link">설정</nuxt-link>
+          <nuxt-link to="/MemoPage" id="memo" class="link">메모</nuxt-link>
+          <nuxt-link to="/CalendarPage" id="calendar" class="link">일정</nuxt-link>
+          <nuxt-link to="/SettingPage" id="setting" class="link">설정</nuxt-link>
           <div class="searchBox">
             <span v-if="me">
               <input
@@ -51,7 +51,7 @@
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link to="/memo">
+            <nuxt-link to="/MemoPage">
               <i class="fas fa-border-all m-btn" :class="$mq"></i>
             </nuxt-link>
           </li>
@@ -61,12 +61,12 @@
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link to="/calendar">
+            <nuxt-link to="/CalendarPage">
               <i class="far fa-calendar-alt m-btn" :class="$mq"></i>
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link to="/setting">
+            <nuxt-link to="/SettingPage">
               <i class="fas fa-user-cog m-btn" :class="$mq"></i>
             </nuxt-link>
           </li>
@@ -116,7 +116,6 @@ export default {
         goTop.style.color = "transparent";
       }
     }, 1000),
-
     detectSearch: debounce(async function() {
       this.keyword = this.kWord;
       const res = await this.$store.dispatch("post/search", {

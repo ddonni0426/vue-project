@@ -16,13 +16,16 @@ router.post('/weeks', isLoggedIn, async (req, res, next) => {
         UserId: req.body.userId,
         startDay: {
           [db.Sequelize.Op.or]: {
-            [db.Sequelize.Op.lte]: `${req.body.year}-${month}-${first}`
-          },
+            [db.Sequelize.Op.lte]: `${req.body.year}-${month}-${first}`,
+
+            [db.Sequelize.Op.and]: {
+              [db.Sequelize.Op.lte]: `${req.body.year}-${month}-${req.body.first}`,
+              [db.Sequelize.Op.gte]: `${req.body.year}-${month}-${req.body.last}`
+            },
+          }
         },
         endDay: {
-          [db.Sequelize.Op.and]: {
             [db.Sequelize.Op.gte]: `${req.body.year}-${month}-${first}`,
-          }
         }
       },
       order: [['startDay', 'ASC'], ['startTime', 'ASC']]

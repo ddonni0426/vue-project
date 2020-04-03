@@ -1,4 +1,4 @@
-import { InitCalendar, MakeCalendar, getWeekth, monthsTable, transform } from './middleware';
+import { InitCalendar, MakeCalendar, getWeekth, monthsTable } from './middleware';
 InitCalendar.Page = new Date().getMonth();
 
 export const state = () => ({
@@ -7,7 +7,6 @@ export const state = () => ({
   calInfo: {
     year: null, month: null, dayNum: null, active: null, weekth: null
   },
-  weekPlans: [],
   todayPlan: [],
 });
 //뮤테이션 시작
@@ -22,23 +21,12 @@ export const mutations = {
     state.calInfo.weekth = payload.weekth;
     return;
   },
-  loadWeekPlan(state, payload) {
-    state.weekPlans = payload.map(e => ({
-      startY: e.startDay.split('-')[0],
-      startM: e.startDay.split('-')[1],
-      startD: e.startDay.split('-')[2],
-      EndY: e.endDay.split('-')[0],
-      EndM: e.endDay.split('-')[1],
-      EndD: e.endDay.split('-')[2],
-      startT: e.startTime,
-      EndT: e.endTime,
-      plan: e.plan
-    })
-    );
-  },
   loadTodayPlan(state, payload) {
     return state.todayPlan = payload;
-  }
+  },
+  addPlan(state, payload) {
+    return
+  },
 };
 //액션 시작
 export const actions = {
@@ -78,12 +66,20 @@ export const actions = {
   },
   async loadWeekPlan({ state, commit }, payload) {
     try {
+      let newfirst = [];
+      payload.first.forEach(v => {
+        if (v !== "") {
+          newfirst.push(v);
+        }
+      });
+
       const res = await this.$axios.post(`/plans/weeks`, {
         userId: payload.userId,
         year: state.calInfo.year,
-        month: transform(state.calInfo.month + 1),
-        day: transform(state.calInfo.active),
-        first: payload.first
+        month: state.calInfo.month + 1,
+        day:state.calInfo.active,
+        first: newfirst[0],
+        last:newfirst[newfirst.length-1]
       }, { withCredentials: true });
       commit('loadWeekPlan', res.data);
     } catch (error) {
@@ -113,7 +109,7 @@ export const actions = {
         endT: payload.endT,
         plan: payload.plan
       }, { withCredentials: true });
-      dispatch('loadTodayPlan', {});
+      dispatch('loadTodayPlan', { userId: payload.userId });
       commit('addPlan', res.data);
     } catch (error) {
       console.error(error);
