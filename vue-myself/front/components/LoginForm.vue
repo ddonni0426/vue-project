@@ -2,7 +2,14 @@
   <div id="login-container" :class="$mq">
     <form @submit.prevent="onLogin" class="login-inner" :class="$mq" v-if="!me">
       <input type="email" class="email" :class="$mq" placeholder="이메일" v-model="email" />
-      <input type="password"  autocomplete="on" class="password" :class="$mq" placeholder="패스워드" v-model="password" />
+      <input
+        type="password"
+        autocomplete="on"
+        class="password"
+        :class="$mq"
+        placeholder="패스워드"
+        v-model="password"
+      />
       <input type="submit" class="login" :class="$mq" value="로그인" />
       <button type="submit" class="login" :class="$mq">
         <i class="fas fa-sign-in-alt" :class="$mq"></i>
@@ -11,8 +18,8 @@
 
     <div v-else class="profile" :class="$mq">
       <p :class="$mq">{{me.nickname}} 님</p>
-      <input type="button" value="로그아웃" @click.prevent="logout" class="logout" :class="$mq" />
-      <button class="logout" :class="$mq" @click.prevent="logout">
+      <input type="button" value="로그아웃" @click="logout" class="logout" :class="$mq" />
+      <button class="logout" :class="$mq" @click="logout">
         <i class="fas fa-power-off" :class="$mq"></i>
       </button>
     </div>
@@ -34,21 +41,20 @@ export default {
   },
   methods: {
     onLogin() {
-      //로그인 요청
       if (this.email && this.password) {
         return this.$store.dispatch("user/login", {
           email: this.email,
           password: this.password
         });
-      }else{
-        return alert('로그인 정보를 입력하세요')
-      } 
+      } else {
+        return alert("로그인 정보를 입력하세요");
+      }
     },
     async logout() {
       try {
-        await this.$store.dispatch('post/rmMood');
+        await sessionStorage.removeItem("diary");
         const res = await this.$store.dispatch("user/logout", {});
-        this.$router.push("/");
+        location.reload();
       } catch (error) {
         console.error(error);
       }
@@ -62,10 +68,14 @@ export default {
     }
   },
   mounted() {
-    document.querySelector('#login-container').addEventListener("keydown", this.onEnter, 0);
+    document
+      .querySelector("#login-container")
+      .addEventListener("keydown", this.onEnter, 0);
   },
   beforeDestroy() {
-    document.querySelector('#login-container').removeEventListener("keydown", this.onEnter);
+    document
+      .querySelector("#login-container")
+      .removeEventListener("keydown", this.onEnter);
   }
 };
 </script>
@@ -97,7 +107,7 @@ export default {
   font-size: 0.9rem;
 }
 
-#login-container .login-inner > input[type="submit"]{
+#login-container .login-inner > input[type="submit"] {
   width: 80px;
   height: 30px;
   border: 1px solid darkgray;
@@ -119,7 +129,8 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
 }
-input[type="button"],input[type="submit"] {
+input[type="button"],
+input[type="submit"] {
   color: #fff;
 }
 button.logout.tablet,
@@ -164,7 +175,7 @@ button.login.tablet i {
 .profile p,
 .profile input {
   padding-right: 10px;
-    line-height: 35px;
+  line-height: 35px;
 
   color: #fff;
 }

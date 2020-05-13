@@ -40,7 +40,6 @@ module.exports = {
     '~/css/reset.css'
   ],
   plugins: [
-    "@/plugins/fontawesome.js",
-    { src: '@/plugins/vue-tiny-slider.js', mode: 'client' }
+    "@/plugins/fontawesome.js"
   ],
 };

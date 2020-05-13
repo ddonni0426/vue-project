@@ -72,7 +72,6 @@ export const actions = {
           newfirst.push(v);
         }
       });
-
       const res = await this.$axios.post(`/plans/weeks`, {
         userId: payload.userId,
         year: state.calInfo.year,

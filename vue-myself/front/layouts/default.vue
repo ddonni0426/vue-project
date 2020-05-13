@@ -11,7 +11,7 @@
           <div class="searchBox">
             <span v-if="me">
               <input
-                type="text"
+                type="search"
                 placeholder="검색어 입력하세요."
                 v-model="kWord"
                 @input.prevent="detectSearch"
@@ -42,7 +42,7 @@
     </section>
     <!-- 테블릿 이하  하단 메뉴시작 -->
     <div class="tab-naviWrap" :class="$mq" v-if="me">
-    <div class="under-nav" :class="$mq"></div>
+      <div class="under-nav" :class="$mq"></div>
       <nav id="tab-bar">
         <ul>
           <li>
@@ -118,6 +118,7 @@ export default {
     }, 1000),
     detectSearch: debounce(async function() {
       this.keyword = this.kWord;
+      console.log("실행",this.keyword);
       const res = await this.$store.dispatch("post/search", {
         userId: this.$store.state.user.me.id,
         keyword: encodeURIComponent(this.keyword)
@@ -129,7 +130,7 @@ export default {
         });
       }
       return;
-    }, 50)
+    }, 500)
   },
   mounted() {
     window.addEventListener("scroll", this.onScroll);
@@ -230,17 +231,18 @@ input {
   border-left: 1px solid #333;
   display: flex;
   justify-content: space-evenly;
+  padding-bottom: 2rem;
 }
 #page #right-paget.mobile {
   flex-grow: 1;
   max-height: 100vh;
   overflow-y: auto;
-
 }
 
 #page #right-page.tablet,
 #page #right-page.mobile {
   border-left: 0;
+  padding-bottom: 4.3rem;
   min-height: 100%;
 }
 #right-page #routingPage {

@@ -15,7 +15,8 @@ const todoRouter = require('./router/todo.js');
 const hashtagRouter = require('./router/hashtag.js');
 const planRouter = require('./router/plan.js');
 const plansRouter = require('./router/plans.js');
-// const oauthRouter = require('/router/oauth.js');
+const feelingRouter = require('./router/feeling.js');
+const feelingsRouter = require('./router/feelings.js');
 
 const index = express();
 
@@ -59,8 +60,8 @@ index.use('/todos', todosRouter);
 index.use('/hashtag', hashtagRouter);
 index.use('/plan',planRouter);
 index.use('/plans',plansRouter);
-
-// index.use('/oauth', oauthRouter);
+index.use('/feeling',feelingRouter)
+index.use('/feelings',feelingsRouter)
 
 index.use(passport.initialize());
 index.use(passport.session());

@@ -35,18 +35,18 @@ router.post('/search', isLoggedIn, async (req, res, next) => {
       where: { UserId: req.body.userId },
       attributes: ['id', 'content', 'important', 'createdAt']
     });
-    //이거 기억해두자 ㅠㅠ 
     let parsed_posts = JSON.stringify(posts); //posts를 문자열로 변환
     parsed_posts = JSON.parse(parsed_posts);//그걸 배열 형태로 변환
     let search_rs = []; //검색결과 담을 빈 배열
     let val; //search_rs에 담길 객체 값
 
     parsed_posts.findIndex((v) => {
-      if (v.content.match(`${keyword}`)) {
+      if (v.content.match(keyword) !== null) {
         val = { id: v.id, content: v.content, important: v.important, createdAt: v.createdAt }
         search_rs.push(val);
       }
     });
+  
     if (!search_rs) {
       return res.status(404).send('검색 결과가 존재하지 않습니다.');
     }

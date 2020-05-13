@@ -1,101 +1,102 @@
 <template>
   <div id="root" :class="$mq">
     <div class="flexWrap" v-if="me" :class="$mq">
-      <h3>오늘은 기분이 어때요?</h3>
+      <h3>오늘의 기분을 마음껏 표현해 주세요</h3>
+      <feeling-form></feeling-form>
       <textarea
         type="text"
-        placeholder="'임금님 귀는 당나귀 귀~!!'
-속시원하게 비우고 싶은 감정이 있나요?"
+        placeholder="아무에게도 말 못할 비밀이 있나요?"
         v-model="mood"
         class="mood"
         @input.prevent="moodInput"
         :class="$mq"
       />
-      <small>로그아웃 시 자동 삭제 됩니다.</small>
+      <small :class="$mq">로그아웃 시 자동 삭제 됩니다!!</small>
+      <a href="#" id="download-diary" download="diary.txt">
+        <input type="button" value="내려받기" title="내려받기" @click.prevent="downloadDiary" />
+      </a>
+      <feeling-chart :feel="feel"></feeling-chart>
     </div>
     <!-- 회원가입  -->
     <div v-else>
       <signup-page></signup-page>
     </div>
-    <!-- 오늘의 메시지 -->
-    <div v-if="me">
-      <vue-inspirational-quote>
-        <template v-slot:default="slotProps">
-          <blockquote class="blockquote quote" :class="$mq">
-            &#8220;{{ slotProps.quote.body }}&#8221;
-            <p>
-              <small>&mdash;{{ slotProps.quote.author }}</small>
-            </p>
-          </blockquote>
-        </template>
-      </vue-inspirational-quote>
-    </div>
-    <!-- <div>{{saveMood}}</div> -->
-    <!-- 오늘의 메시지 -->
   </div>
 </template>
 <script>
 import SignupPage from "./SignupPage.vue";
-import VueInspirationalQuote from "vue-inspirational-quote";
 import debounce from "lodash.debounce";
+import FeelingForm from "../components/FeelingForm.vue";
+import FeelingChart from "../components/FeelingChart.vue";
 
 export default {
   components: {
     SignupPage,
-    VueInspirationalQuote
+    FeelingForm,
+    FeelingChart
   },
   data() {
     return {
-      tinySliderOptions: {
-        mouseDrag: true,
-        loop: false,
-        items: 3,
-        swipeAngle: 45
-      },
       mood: ""
     };
   },
   computed: {
     me() {
       return this.$store.state.user.me;
+    },
+    feel() {
+      return this.$store.state.feeling.feeling;
     }
   },
   methods: {
-    saveMood() {
-      console.log("saveMood");
-      if (this.$store.state.post.saveMood) {
-        this.mood = this.$store.state.post.saveMood;
-        return this.mood;
-      }
+    downloadDiary() {
+      let content = this.mood;
+      let date = new Date();
+      let title = `${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getUTCSeconds()}.txt`;
+
+      let link = document.querySelector("#download-diary");
+      link.setAttribute(
+        "href",
+        "data:text/plain;charset=utf-8," + encodeURIComponent(content)
+      );
+      link.setAttribute("download", title);
+      link.click();
     },
+
     moodInput: debounce(async function() {
-      console.log("인풋action 실행");
       try {
-        await this.$store.dispatch("post/setMood", { mood: this.mood });
-        this.saveMood();
-        console.log("실행");
+        sessionStorage.setItem("diary", this.mood);
       } catch (error) {
         console.log(error);
       }
       return;
-    }, 3000)
+    }, 1000)
   },
   async fetch({ store }) {
-    await store.dispatch("todo/loadTodos", {
-      userId: store.state.user.me.id,
-      reset: true
-    });
+    if (store.state.user.me) {
+      let me = store.state.user.me.id;
+      await store.dispatch("todo/loadTodos", {
+        userId: me,
+        reset: true
+      });
+      await store.dispatch("feeling/getfeeling", {
+        userId: me,
+        feeling: false
+      });
+    }
     return;
   },
   mounted() {
-    console.log("마운트", this.saveMood());
+    this.mood = sessionStorage.getItem("diary");
+  },
+  beforeDestroy() {
+    this.mood = null;
   },
   middleware: "authenticated"
 };
 </script>
 
 <style scoped>
-/* 포스트잇 CSS */
 #root {
   position: relative;
   margin: 0 auto;
@@ -112,10 +113,20 @@ export default {
 #root.flexWrap.mobile {
   min-width: 100%;
 }
+h3 {
+  display: inline;
+}
+small {
+  font-size: 14px;
+}
+small.mobile {
+  display: block;
+}
 .mood {
+  background-color: transparent;
   box-sizing: border-box;
   padding: 5px;
-  margin: 1em auto 0;
+  margin: 0 auto 0;
   border: 2px solid #333;
   width: 100%;
   height: 300px;

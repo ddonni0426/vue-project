@@ -36,8 +36,11 @@ export const actions = {
   },
   async signup({ commit, redirect }, payload) {
     try {
-      await this.$axios.post('/user/signup', {
+      const res = await this.$axios.post('/user/signup', {
         email: payload.email, nickname: payload.nickname, password: payload.password,
+      });
+      const rs =  await this.$axios.post('/feelings/',{
+        UserId:res.data.id
       });
       this.$router.push('/');
     } catch (err) {
@@ -61,7 +64,7 @@ export const actions = {
   async logout({ commit }) {
     try {
       await this.$axios.post('/user/logout', {}, { withCredentials: true });
-      commit('removeMe', null);
+      await commit('removeMe', null);
       this.$router.push('/');
       return;
     } catch (error) {

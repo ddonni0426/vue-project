@@ -1,5 +1,5 @@
 <template>
-  <div class="settingWrap" :class="$mq" >
+  <div class="settingWrap" :class="$mq">
     <form @submit.prevent="onSubmit" :class="$mq">
       <table class="settingForm">
         <caption>
@@ -8,28 +8,53 @@
         <tbody>
           <tr>
             <td>
-              <input type="text" name="newNick" autocomplete="on" :placeholder="`현재 닉네임:${oldNick}`" v-model="newNick" />
+              <input
+                type="text"
+                name="newNick"
+                autocomplete="on"
+                :placeholder="`현재 닉네임:${oldNick}`"
+                v-model="newNick"
+              />
             </td>
           </tr>
           <tr>
             <td>
-              <input type="password" name="password1" autocomplete="current-password" placeholder="현재 비밀번호" v-model="password" />
+              <input
+                type="password"
+                name="password1"
+                autocomplete="current-password"
+                placeholder="현재 비밀번호"
+                v-model="password"
+              />
             </td>
           </tr>
           <tr>
             <td>
-              <input type="password" name="password2" autocomplete="new-password" placeholder="새 비밀번호" v-model="password2" />
+              <input
+                type="password"
+                name="password2"
+                autocomplete="new-password"
+                placeholder="새 비밀번호"
+                v-model="password2"
+              />
             </td>
           </tr>
           <tr>
             <td>
-              <input type="password" name="password3" autocomplete="new-password" placeholder="새 비밀번호" v-model="password3" />
+              <input
+                type="password"
+                name="password3"
+                autocomplete="new-password"
+                placeholder="새 비밀번호 확인"
+                v-model="password3"
+              />
             </td>
           </tr>
         </tbody>
       </table>
-      <button type="submit" class="signupBtn">Modify</button>
+      <button type="submit" class="signupBtn">회원정보수정</button>
     </form>
+    <!-- <button class="signout" @click="signout">회원탈퇴</button> -->
   </div>
 </template>
 
@@ -37,21 +62,28 @@
 export default {
   data() {
     return {
-      newNick:null,
+      newNick: null,
       password: null,
       password2: null,
       password3: null,
+      me: this.$store.state.user.me.id
     };
   },
   computed: {
-    oldNick(){
+    oldNick() {
       return this.$store.state.user.me.nickname;
     }
   },
   methods: {
+    // signout() {
+    //   alert('정말 탈퇴 하나요?');
+    //   this.$store.dispatch("user/signout", {
+    //     userId: this.me
+    //   });
+    // },
     isFilled() {
-      if(this.newNick === null){
-        this.newNick = this.oldNick
+      if (this.newNick === null) {
+        this.newNick = this.oldNick;
       }
       if (this.password && this.password2 && this.password3) {
         return true;
@@ -70,26 +102,33 @@ export default {
         if (this.passwordCheck()) {
           await this.$store.dispatch("user/modify", {
             userId: this.$store.state.user.me.id,
-            newNick:this.newNick,
+            newNick: this.newNick,
             oldPass: this.password,
             newPass: this.password2
           });
           this.resetForm();
         }
       } else {
-        debugger ;
+        debugger;
       }
     },
     passwordCheck() {
       return this.password2 === this.password3;
-    },
+    }
   },
+  async fetch({ store }) {
+    await store.dispatch("todo/loadTodos", {
+      userId: store.state.user.me.id,
+      reset: true
+    });
+  },
+
   middleware: "authenticated" //로그인 한 사람만 접근가능
 };
 </script>
 
 <style scoped>
-.settingWrap{
+.settingWrap {
   width: 100%;
 }
 form,
@@ -102,7 +141,7 @@ form.tablet,
 form.mobile {
   margin: 10px auto;
   width: 95%;
-  text-align: center; 
+  text-align: center;
 }
 h3 {
   font-size: 22px;

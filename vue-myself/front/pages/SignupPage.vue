@@ -96,6 +96,7 @@ export default {
               });
               this.resetForm();
               if (result) {
+                  alert('회원가입완료');
                 this.$router.push("/");
               }
             }
@@ -142,7 +143,7 @@ export default {
     passwordCheck() {
       return this.password === this.password2;
     },
-    permission() {
+    permission() {  
       return this.checked === true;
     },
     onEnter(e) {

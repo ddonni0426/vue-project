@@ -79,8 +79,8 @@ ul.post-card > li.card-item {
   margin: 0 0.8rem 1rem;
   padding: 10px;
   box-sizing: border-box;
-  border: 2px solid gold;
-  background: #f5f6ce;
+  border: 2px solid #F5A9A9 ;
+  background: #FBEFEF ;
 }
 
 ul.post-card > li.card-item > div {

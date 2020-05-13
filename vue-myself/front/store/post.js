@@ -2,7 +2,6 @@ import throttle from 'lodash.throttle';
 
 export const state = () => ({
   posts: [],
-  saveMood: '',
   starPosts: [],
   hasMorePost: true,
   hasMoreStar: true,
@@ -56,12 +55,7 @@ export const mutations = {
     }
     return state.hasMoreStar = payload.data.length === 10;
   },
-  setMood(state, payload) {
-    return state.saveMood = payload;
-  },
-  rmMood(state) {
-    return state.saveMood = '';
-  }
+
 };
 
 //액션 시작
@@ -143,6 +137,7 @@ export const actions = {
         keyword: payload.keyword
       }, { withCredentials: true });
       commit('search', res.data);
+
       return;
     } catch (error) {
       console.error(error);
@@ -164,7 +159,6 @@ export const actions = {
       console.error(error);
     }
   },
-
   //테이블에 있는 나의 중요 포스트 모두 가져와야 함.
   loadStars: throttle(async function ({ state, commit }, payload) {
     try {
@@ -186,21 +180,4 @@ export const actions = {
       console.error(error);
     }
   }, 1000),
-
-  async setMood({ commit }, payload) {
-    try {
-      commit('setMood', payload.mood);
-      return;
-    } catch (error) {
-      console.error(error)
-    }
-  },
-  async rmMood({ commit }) {
-    try {
-      commit('rmMood');
-      return;
-    } catch (error) {
-      console.error(error)
-    }
-  },
 };
