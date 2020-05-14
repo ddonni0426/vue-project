@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "nuxt",
-    "build":"nuxt build",
-    "start":"nuxt start"
+    "build": "nuxt build",
+    "start": "cross-env PORT=80 NODE_ENV=production node server"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,8 @@
     "@nuxtjs/moment": "^1.6.0",
     "axios": "^0.19.2",
     "chart.js": "^2.9.3",
+    "cross-env": "^7.0.2",
+    "express": "^4.17.1",
     "friendly-errors-webpack-plugin": "^1.7.0",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
