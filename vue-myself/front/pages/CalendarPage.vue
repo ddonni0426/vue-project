@@ -64,7 +64,10 @@
                 <li v-for=" plan in todayPlan" :key="`${plan}${Math.random()}`" class="each-plan">
                   <p>
                     <span>{{`${plan.plan}`}}</span>
-                    <span class="planInfo">{{plan.endDay.slice(5)}}-{{plan.startTime}}까지</span>
+                    <span class="planInfo">
+                      (마감:{{plan.endDay.slice(5)}}, 
+                      {{plan.startTime}}까지)
+                    </span>
                   </p>
                 </li>
               </ul>
@@ -261,7 +264,7 @@ td {
 .each-plan {
   font-size: 16px;
   height: 50px;
-  background-color: #fbefef;
+
 }
 .each-plan p {
   font-size: 18px;

@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "nuxt"
+    "serve": "nuxt",
+    "build":"nuxt build",
+    "start":"nuxt start"
   },
   "author": "",
   "license": "ISC",
