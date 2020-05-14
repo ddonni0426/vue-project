@@ -52,9 +52,8 @@ module.exports = {
     port: process.env.PORT || 3000,
   },
   axios: {
-    browserBaseURL: 'http://localhost:3085', //클라이언트에서 axios보낼 때
-    baseURL: 'http://localhost:3085', //서버에서 axios보낼 때
-    //baseURL 설정 하면 store에 axios요청 보내는 부분에 자동으로 위 기본URL 대입됨.
+    browserBaseURL: process.env.NODE_ENV === 'production' ? 'http://api.daycatcher.site' : 'http://localhost:3085', 
+    baseURL:process.env.NODE_ENV === 'production' ? 'http://api.daycatcher.site' : 'http://localhost:3085', 
     https: false,
   },
   css: [
