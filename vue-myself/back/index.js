@@ -86,8 +86,6 @@ index.post('/user', async (req, res) => {
   }
 });
 
-
-
 if (prod) {
   const lex = require('greenlock-express').create({
     version: 'draft-11',

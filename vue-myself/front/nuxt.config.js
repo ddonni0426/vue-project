@@ -52,8 +52,8 @@ module.exports = {
     port: process.env.PORT || 3000,
   },
   axios: {
-    browserBaseURL: process.env.NODE_ENV === 'production' ? 'http://api.daycatcher.site' : 'http://localhost:3085', 
-    baseURL:process.env.NODE_ENV === 'production' ? 'http://api.daycatcher.site' : 'http://localhost:3085', 
+    browserBaseURL: process.env.NODE_ENV === 'production' ? 'https://api.daycatcher.site' : 'http://localhost:3085', 
+    baseURL:process.env.NODE_ENV === 'production' ? 'https://api.daycatcher.site' : 'http://localhost:3085', 
     https: false,
   },
   css: [
