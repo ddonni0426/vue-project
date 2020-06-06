@@ -1,4 +1,4 @@
-import { InitCalendar, MakeCalendar, getWeekth, monthsTable } from './middleware';
+import { InitCalendar, MakeCalendar, getWeekth, monthsTable } from './calMiddle';
 InitCalendar.Page = new Date().getMonth();
 
 export const state = () => ({

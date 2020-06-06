@@ -12,7 +12,7 @@ const months = [
   { id: 10, name: 'November', lastDay: 30 },
   { id: 11, name: 'December', lastDay: 31 },
 ];
-//id를 키값으로 한 객체로 변환
+
 export const monthsTable = months.reduce((prev, val) => (
   { ...prev, [val.id]: val }
 ), {});

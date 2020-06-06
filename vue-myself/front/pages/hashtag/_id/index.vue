@@ -47,7 +47,6 @@ export default {
       }
     },
     mounted() {
-      //created에서는 DOM이나 window객체 못 씀
       window.addEventListener("scroll", this.onScroll);
     },
     beforeDestroy() {
@@ -88,8 +87,8 @@ ul.post-card > li.card-item {
   margin: 0 0.8rem 1rem;
   padding: 10px;
   box-sizing: border-box;
-  border: 2px solid gold;
-  background: #f5f6ce;
+  border: 2px solid #f5a9a9;
+  background: #fbefef;
 }
 
 ul.post-card > li.card-item > div {

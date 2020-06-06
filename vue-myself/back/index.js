@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-// const bcrypt = require('bcrypt');
 const passport = require('passport');
 const session = require('express-session');
 const cookie = require('cookie-parser');
@@ -8,6 +7,8 @@ const morgan = require('morgan');
 const hpp = require('hpp');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
+const http = require('http');
+const https = require('https');
 
 
 const prod = process.env.NODE_ENV === 'production';
@@ -23,7 +24,6 @@ const planRouter = require('./router/plan.js');
 const plansRouter = require('./router/plans.js');
 const feelingRouter = require('./router/feeling.js');
 const feelingsRouter = require('./router/feelings.js');
-
 const index = express();
 
 dotenv.config();
@@ -56,7 +56,7 @@ index.use(session({
   secret: process.env.COOKIE_SECRET,
   cookie: {
     httpOnly: true,
-    secure: false, //배포시엔 https로 바꾸고 secure값도 true로 해주기
+    secure: prod, //배포시엔 https로 바꾸고 secure값도 true로 해주기
     domain:prod && '.daycatcher.site',
   },
 }));
@@ -64,10 +64,7 @@ index.use(session({
 index.use(passport.initialize());
 index.use(passport.session());
 
-index.get('/', (req, res) => {
-  res.send('안녕 시퀄라이즈');
-  //status(상태코드)가 생략되어있음. send()메소드 는 body에 메시지를 넣음
-});
+index.get('/', (req, res) => { res.send('Hello');});
 
 index.use('/user', userRouter);
 index.use('/post', postRouter);
@@ -92,3 +89,30 @@ index.post('/user', async (req, res) => {
 index.listen(prod ? process.env.PORT:3085, () => {
   console.log(`백엔드 서버${prod ? process.env.PORT:3085}번 포트에서 작동중`);
 });
+
+if (prod) {
+  const lex = require('greenlock-express').create({
+    version: 'draft-11',
+    configDir: '/etc/letsencrypt', // 또는 ~/letsencrypt/etc
+    server: 'https://acme-v02.api.letsencrypt.org/directory',
+    email: 'zerohch0@gmail.com',
+    store: require('greenlock-store-fs'),
+    approveDomains: (opts, certs, cb) => {
+      if (certs) {
+        opts.domains = ['api.nodebird.com'];
+      } else {
+        opts.email = 'zerohch0@gmail.com';
+        opts.agreeTos = true;
+      }
+      cb(null, { options: opts, certs });
+    },
+    renewWithin: 81 * 24 * 60 * 60 * 1000,
+    renewBy: 80 * 24 * 60 * 60 * 1000,
+  });
+  https.createServer(lex.httpsOptions, lex.middleware(app)).listen(443);
+  http.createServer(lex.middleware(require('redirect-https')())).listen(80);
+} else {
+  app.listen(prod ? process.env.PORT : 3085, () => {
+    console.log(`server is running on ${process.env.PORT}`);
+  });
+}
