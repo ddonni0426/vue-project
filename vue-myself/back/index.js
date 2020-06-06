@@ -86,22 +86,22 @@ index.post('/user', async (req, res) => {
   }
 });
 
-index.listen(prod ? process.env.PORT:3085, () => {
-  console.log(`백엔드 서버${prod ? process.env.PORT:3085}번 포트에서 작동중`);
+index.listen(prod ? process.env.PORT:3000, () => {
+  console.log(`백엔드 서버${prod ? process.env.PORT:3000}번 포트에서 작동중`);
 });
 
 if (prod) {
   const lex = require('greenlock-express').create({
     version: 'draft-11',
-    configDir: '/etc/letsencrypt', // 또는 ~/letsencrypt/etc
+    configDir: '/etc/letsencrypt',
     server: 'https://acme-v02.api.letsencrypt.org/directory',
-    email: 'zerohch0@gmail.com',
+    email: 'doeun826@kakao.com',
     store: require('greenlock-store-fs'),
     approveDomains: (opts, certs, cb) => {
       if (certs) {
-        opts.domains = ['api.nodebird.com'];
+        opts.domains = ['api.daycatcher.site'];
       } else {
-        opts.email = 'zerohch0@gmail.com';
+        opts.email = 'doeun826@kakao.com';
         opts.agreeTos = true;
       }
       cb(null, { options: opts, certs });
@@ -112,7 +112,7 @@ if (prod) {
   https.createServer(lex.httpsOptions, lex.middleware(app)).listen(443);
   http.createServer(lex.middleware(require('redirect-https')())).listen(80);
 } else {
-  app.listen(prod ? process.env.PORT : 3085, () => {
+  app.listen(prod ? process.env.PORT : 3000, () => {
     console.log(`server is running on ${process.env.PORT}`);
   });
 }
