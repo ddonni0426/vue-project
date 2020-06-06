@@ -30,12 +30,6 @@
               <i class="fas fa-star" v-else></i>
             </a>
           </li>
-          <!-- 수정 -->
-          <li>
-            <a href @submit="copySomething">
-              <i class="far fa-share-square"></i>
-            </a>
-          </li>
           <li>
             <a href @click.prevent="onEdit">
               <!-- 메뉴 -->
@@ -73,15 +67,6 @@ export default {
     };
   },
   methods: {
-    async copySomething() {
-      const nodes = document.querySelector('#nodes');
-      console.log('카피노드',nodes.innerText)
-      try {
-        await this.$copyText(this.copyNode);
-      } catch (e) {
-        console.error(e);
-      }
-    },
     async onEdit() {
       if (this.onEditor === false) {
         return (this.onEditor = !this.onEditor);
