@@ -86,9 +86,9 @@ index.post('/user', async (req, res) => {
   }
 });
 
-index.listen(prod ? process.env.PORT:3085, () => {
-  console.log(`백엔드 서버${prod ? process.env.PORT:3085}번 포트에서 작동중`);
-});
+// index.listen(prod ? process.env.PORT:3000, () => {
+//   console.log(`백엔드 서버${prod ? process.env.PORT:3000}번 포트에서 작동중`);
+// });
 
 if (prod) {
   const lex = require('greenlock-express').create({
@@ -109,10 +109,10 @@ if (prod) {
     renewWithin: 81 * 24 * 60 * 60 * 1000,
     renewBy: 80 * 24 * 60 * 60 * 1000,
   });
-  https.createServer(lex.httpsOptions, lex.middleware(app)).listen(443);
+  https.createServer(lex.httpsOptions, lex.middleware(index)).listen(443);
   http.createServer(lex.middleware(require('redirect-https')())).listen(80);
 } else {
-  app.listen(prod ? process.env.PORT : 3085, () => {
+  index.listen(prod ? process.env.PORT : 3085, () => {
     console.log(`server is running on ${process.env.PORT}`);
   });
 }
