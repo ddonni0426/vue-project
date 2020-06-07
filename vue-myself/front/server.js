@@ -1,4 +1,6 @@
 const { Nuxt, Builder } = require('nuxt');
+const https = require('http');
+const http = require('https');
 
 const app = require('express')();
 const isProd = (process.env.NODE_ENV === 'production');
@@ -20,7 +22,7 @@ if (config.dev) {
   listen();
 }
 
-module.exports = function listen() {
+ function listen() {
   // Listen the server
   if (isProd) {
     const lex = require('greenlock-express').create({
