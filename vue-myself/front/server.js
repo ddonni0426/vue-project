@@ -20,7 +20,7 @@ if (config.dev) {
   listen();
 }
 
-function listen() {
+module.exports = function listen() {
   // Listen the server
   if (isProd) {
     const lex = require('greenlock-express').create({
