@@ -1,6 +1,6 @@
 const { Nuxt, Builder } = require('nuxt');
-const https = require('http');
-const http = require('https');
+const http = require('http');
+const https = require('https');
 
 const app = require('express')();
 const isProd = (process.env.NODE_ENV === 'production');
