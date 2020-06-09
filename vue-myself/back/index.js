@@ -27,7 +27,7 @@ const feelingsRouter = require('./router/feelings.js');
 const index = express();
 
 dotenv.config();
-db.sequelize.sync({ force: false });
+db.sequelize.sync();
 passportConfig();
 
 if (prod) {
@@ -35,13 +35,13 @@ if (prod) {
   index.use(hpp());
   index.use(morgan("combined"));
   index.use(cors({
-    origin: 'http://daycatcher.site',
+    origin: /daycatcher\.site$/,
     credentials: true,
   }));
 } else {
   index.use(morgan("dev"));
   index.use(cors({
-    origin: 'http://localhost:3000',
+    origin: true,
     credentials: true, 
   }));
 }
