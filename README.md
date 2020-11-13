@@ -1,4 +1,4 @@
-# vue-project
+# Daycatcher 데이캐쳐 프로젝트
 
 다이어리처럼 소소하지만 혼자 보고 싶은 글들, 나를 기록할 수 있는 웹앱
 
@@ -16,14 +16,13 @@
 
 ✓ 일정을 추가할 수 있습니다.
 
-https://drive.google.com/file/d/1VsUSI8SE0LkHRZDBezMFAJgTFqlRY8H2/view?usp=sharing
 
+https://drive.google.com/file/d/1pdlRuWg8hgtjXR9IKTKAAnzui_wzhrJT/view?usp=sharing
 
 
 
 ---------------------------------------------------
-
-2020.07.16 오류 및 개선 필요 사항 체크
+오류 및 개선 필요 사항 체크
 
 - 기분 버튼 클릭 시 기분 차트가 바로 동기화 되지 않는다는 점.
 - 일정 수정, 삭제 기능 추가 필요
